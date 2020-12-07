@@ -11,20 +11,25 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+You have to perform a classification on provided dataset of Heart Attack prediction.
+For that prediction, first of all you have to preprocess dataset and convert it into
+appropriate numeric form. Then you have to perform any Machine Learning model for the
+prediction of Label. Here are some outcomes of the project that I expect from that I expect
+from you.  
+  
+1. Preprocessing  
+  
+2. Applying more than 3 Machine Learning algorithms for the prediction and apply
+majority voting concept for the final output. Majority voting means to take Predicted labels
+from all applied classifiers and assign final label according to majority vote.  
+  
+3. Exploratory Data Analysis: Lot of graphs to understand the Data insights.  
+  
+4. Accuracy, F Score more than 65 percent. The more the F-score, more marks will be
+awarded.  
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+You can use Numpy, Pandas, Sklearn, Matplotlib library for that.  
 
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Warning  
+In case of plagiarism you will be awarded 0 marks in Project and got F grade in Exam
+too.

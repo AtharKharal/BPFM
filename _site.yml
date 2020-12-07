@@ -1,0 +1,19 @@
+--- 
+name: "BP-website"
+output_dir: docs
+navbar:
+  title: "Blood Pressure Project"
+  left:
+    - text: "Statement"
+      href: statement.html
+    - text: "Data Cleaning"
+      href: cleaning.html
+    - text: "Exploratory Data Analysis"
+      href: eda.html
+    - text: "Model Building"
+      href: model.html
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+---

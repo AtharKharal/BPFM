@@ -410,24 +410,39 @@ div.tocify {
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
-</div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="cleaning_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="reading-data" class="section level1">
+<h1>Reading Data</h1>
+<p>All the values marked as ‘?’ have been read-in as NA’s using built-in feature of pandas read_csv method.</p>
+<pre class="python"><code>import pandas as pd
+dt = pd.read_csv(&#39;Blood_Pressure_data.csv&#39;, na_values=&#39;?&#39; )</code></pre>
+<pre><code>## sys:1: DtypeWarning: Columns (10) have mixed types.Specify dtype option on import or set low_memory=False.</code></pre>
+<pre class="python"><code>dt.head(20)</code></pre>
+<pre><code>##          id  patient_no             cast  ... change  Med label
+## 0   2278392     8222157        Caucasian  ...     No   No    NO
+## 1    149190    55629189        Caucasian  ...     Ch  Yes    &gt;5
+## 2     64410    86047875  AfricanAmerican  ...     No  Yes    NO
+## 3    500364    82442376        Caucasian  ...     Ch  Yes    NO
+## 4     16680    42519267        Caucasian  ...     Ch  Yes    NO
+## 5     35754    82637451        Caucasian  ...     No  Yes    &gt;5
+## 6     55842    84259809        Caucasian  ...     Ch  Yes    NO
+## 7     63768   114882984        Caucasian  ...     No  Yes    &gt;5
+## 8     12522    48330783        Caucasian  ...     Ch  Yes    NO
+## 9     15738    63555939        Caucasian  ...     Ch  Yes    NO
+## 10    28236    89869032  AfricanAmerican  ...     No  Yes    &gt;5
+## 11    36900    77391171  AfricanAmerican  ...     Ch  Yes   &lt;30
+## 12    40926    85504905        Caucasian  ...     Ch  Yes   &lt;30
+## 13    42570    77586282        Caucasian  ...     No  Yes    NO
+## 14    62256    49726791  AfricanAmerican  ...     No  Yes    &gt;5
+## 15    73578    86328819  AfricanAmerican  ...     Ch  Yes    NO
+## 16    77076    92519352  AfricanAmerican  ...     Ch  Yes   &lt;30
+## 17    84222   108662661        Caucasian  ...     No  Yes    NO
+## 18    89682   107389323  AfricanAmerican  ...     No  Yes    &gt;5
+## 19   148530    69422211              NaN  ...     Ch  Yes    NO
+## 
+## [20 rows x 50 columns]</code></pre>
+<p>Shape of the data is given as:</p>
+<pre class="python"><code>dt.shape</code></pre>
+<pre><code>## (101766, 50)</code></pre>
 </div>
 
 

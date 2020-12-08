@@ -18,8 +18,8 @@ import pandas as pd
 dt = pd.read_csv('Blood_Pressure_data.csv', na_values='?' )
 ```
 
-```{r}
-head(py$dt)
+```{python}
+dt.head(20)
 ```
 
 Shape of the data is given as:

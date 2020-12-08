@@ -8,7 +8,6 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)
-
 ```
 
 # Reading Data  
@@ -42,5 +41,9 @@ dt.describe().round(2)
 
 
 ## Data Cleaning  
-Here the data shall be cleaned.  
+How many nulls in each column:
+```{python}
+dt['weight'].isnull().sum()
+```
+
 

@@ -410,6 +410,13 @@ div.tocify {
 </div>
 
 
+<p>Plan of the work:</p>
+<ul>
+<li><p>Delete unique ID, too many NAs, rows with label==NA and columns not interpretable/meaningful ones</p></li>
+<li><p>Lump all &gt;5 and &lt;30 labels as ‘Yes’</p></li>
+<li><p>Feature selection/importance and reduction</p></li>
+<li><p>May use RF, ANN and Naive Bayes</p></li>
+</ul>
 <p>A glimpse into the structure of the dataset is given below:</p>
 <pre class="r"><code>dt  &lt;- read.csv(&quot;Blood_Pressure_data.csv&quot;)
 glimpse(dt)</code></pre>
@@ -465,12 +472,8 @@ glimpse(dt)</code></pre>
 ## $ change                   &lt;chr&gt; &quot;No&quot;, &quot;Ch&quot;, &quot;No&quot;, &quot;Ch&quot;, &quot;Ch&quot;, &quot;No&quot;, &quot;Ch&quot;, ...
 ## $ Med                      &lt;chr&gt; &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;...
 ## $ label                    &lt;chr&gt; &quot;NO&quot;, &quot;&gt;5&quot;, &quot;NO&quot;, &quot;NO&quot;, &quot;NO&quot;, &quot;&gt;5&quot;, &quot;NO&quot;, ...</code></pre>
-<pre class="r"><code>table(dt$weight)</code></pre>
-<pre><code>## 
-##         ?    [0-25) [100-125) [125-150) [150-175) [175-200)   [25-50)   [50-75) 
-##     98569        48       625       145        35        11        97       897 
-##  [75-100)      &gt;200 
-##      1336         3</code></pre>
+<pre class="r"><code>length(unique(dt$diag_3))</code></pre>
+<pre><code>## [1] 790</code></pre>
 <pre class="r"><code>skimr::skim(dt)</code></pre>
 <table>
 <caption>Data summary</caption>

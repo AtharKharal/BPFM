@@ -7,6 +7,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
+Plan of the work:  
+
+- Delete unique ID, too many NAs, rows with label==NA and columns not interpretable/meaningful ones  
+
+- Lump all >5 and <30 labels as 'Yes'  
+
+- Feature selection/importance and reduction  
+
+- May use RF, ANN and Naive Bayes  
+
 
 A glimpse into the structure of the dataset is given below:
 
@@ -15,7 +25,7 @@ dt  <- read.csv("Blood_Pressure_data.csv")
 glimpse(dt)
 ```
 ```{r}
-table(dt$weight)
+length(unique(dt$diag_3))
 ```
 ```{r}
 skimr::skim(dt)

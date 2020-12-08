@@ -29,5 +29,13 @@ Shape of the data is given as:
 dt.shape
 ```
 
+Names of the columns are given below:
+```{r}
+names(py$dt)
+```
+A first summary of the data is given as:
+```{python}
+dt.describe().round(2)
+```
 
 

@@ -1,5 +1,5 @@
 ---
-title: "Problem Statement"
+title: "Task Statement"
 author: "Mahreen Athar"
 date: "12/7/2020"
 output: html_document
@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Assignment  
 
 You have to perform a classification on provided dataset of Heart Attack prediction.
 For that prediction, first of all you have to preprocess dataset and convert it into

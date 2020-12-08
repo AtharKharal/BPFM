@@ -1,19 +1,24 @@
 ---
-title: "Predicting BP"
-author: "Mahreen Athar"
-date: "12/7/2020"
-output: html_document
+# title: "Predicting BP"
+# author: "Mahreen Athar"
+# date: "12/7/2020"
+output:
+  html_document:
+    toc: no
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Some Pic Here  
+# Solution of Assignemnt on  
 
-For example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+# Data Science 301  
+#   submitted to  
+#   Sir Umair   
+#  -----------  
+#  BS Data Science  
+#   submitted by  
+# Mahreen Athar  
+# ID: 1917123  
 

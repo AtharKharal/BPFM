@@ -12,6 +12,8 @@ navbar:
       href: eda.html
     - text: "Model Building"
       href: model.html
+    - text: "R Solution"
+      href: rsol.html
   right:
   - icon: fa-github
     href: https://github.com/MahreenAthar/BloodPressureDataAnalysis

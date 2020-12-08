@@ -1,0 +1,28 @@
+---
+title: "R Solution"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+library(reticulate)
+library(tidyverse)
+```
+
+
+```{python}
+import pandas as pd
+dt = pd.read_csv('Blood_Pressure_data.csv', na_values='?' )
+```
+
+A glimpse into the structure of the dataset is given below:
+
+```{r}
+dt = py$dt
+glimpse(dt)
+```
+

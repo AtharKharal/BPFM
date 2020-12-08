@@ -17,14 +17,17 @@ All the values marked as '?' have been read-in as NA's using built-in feature of
 import pandas as pd
 dt = pd.read_csv('Blood_Pressure_data.csv', na_values='?' )
 ```
-
-```{python}
-dt.head(20)
+A sample of random 100 rows from the dataset is displayed below:
+```{r}
+DT::datatable(py$dt[sample(nrow(py$dt),100),])
 ```
+
 
 Shape of the data is given as:
 
 ```{python}
 dt.shape
 ```
+
+
 

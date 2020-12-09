@@ -21,46 +21,53 @@ Plan of the work:
 A glimpse into the structure of the dataset is given below:
 
 ```{r}
-dt  <- read.csv("Blood_Pressure_data.csv", stringsAsFactors=TRUE)
-dt[dt=="?"] <- NA
-glimpse(dt)
+dt_original  <- read.csv("Blood_Pressure_data.csv", stringsAsFactors=TRUE)
+dt_original[dt_original=="?"] <- NA
 ```
 
 ```{r}
-skm <- skimr::skim(dt)
-skm
+skm_original <- skimr::skim(dt_original)
 ```
 
 Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as "717 patients visited 5 times")
 ```{r}
-vv=sort(table(dt$patient_no),decreasing = T)
+vv=sort(table(dt_original$patient_no),decreasing = T)
 sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% rename(Visits=Var1, 'No of Patients' = Freq) %>% select(`No of Patients`,Visits) %>% as.matrix() %>% huxtable::as_huxtable(add_colnames=T)    #DT::datatable(fillContainer=TRUE)
 ```
 
 Dataset health may be seen by following table:
 
 ```{r}
-skm %>% filter(complete_rate<0.999) %>% select(skim_variable, n_missing, complete_rate) %>% arrange(complete_rate)
+skm_original %>% filter(complete_rate<0.999) %>% 
+  select(skim_variable, n_missing, complete_rate, factor.n_unique) %>% 
+  rename(Variable=skim_variable,Missings=n_missing,CompletenessRate=complete_rate,Uniques=factor.n_unique) %>% 
+  arrange(CompletenessRate) %>% huxtable::as_huxtable(add_colnames=T)
 ```
 On the basis of above data health table and other Machine Learning considerations we drop certain columns and get a cleaned dataset. 
 
 ```{r}
-dt %>% 
-  select(-c(id, weight, discharge_disposition_id, admission_source_id)) %>%   # useless cols e.g. Id's and having more than 10 factors
+dt <- dt_original %>% 
+  select(-c(id, weight, discharge_disposition_id, admission_source_id, patient_no, admission_typeid)) %>%   # useless cols e.g. Id's and having more than 10 factors
+  select(-c(payer_code, medical_specialty)) %>%   # high cardinality factor variables respectively 17 and 72
   select(-c(diag_1, diag_2, diag_3)) %>%   # useless because these contain integer and V## type mixed entries, factors are more than 700
-  select(-c(examide,citoglipton)) %>%      # have only 1 factor througout 
-  mutate(label=fct_recode(dt$label,YES=">5",YES="<30")
-         
-         
-         ) %>%  
-  head()
+  select(-c(examide,citoglipton)) %>%      # have only 1 factor throughout 
+  mutate(label=fct_recode(dt_original$label,YES=">5",YES="<30"),
+         age.group=factor(age.group,ordered=T)
+         )
 ```
 
 
 ```{r}
-names(skm)
+skm <- skimr::skim(dt)
+skm
 ```
+Structure of the cleaned dataset is given below:
 ```{r}
+glimpse(dt)
+```
 
+It is a almost balanced dataset in terms of classes:
+```{r}
+table(dt$label)
 ```
 

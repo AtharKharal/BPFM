@@ -418,61 +418,89 @@ div.tocify {
 <li><p>May use RF, ANN and Naive Bayes</p></li>
 </ul>
 <p>A glimpse into the structure of the dataset is given below:</p>
-<pre class="r"><code>dt  &lt;- read.csv(&quot;Blood_Pressure_data.csv&quot;, stringsAsFactors=TRUE)
-dt[dt==&quot;?&quot;] &lt;- NA
-glimpse(dt)</code></pre>
-<pre><code>## Rows: 101,766
-## Columns: 50
-## $ id                       &lt;int&gt; 2278392, 149190, 64410, 500364, 16680, 357...
-## $ patient_no               &lt;int&gt; 8222157, 55629189, 86047875, 82442376, 425...
-## $ cast                     &lt;fct&gt; Caucasian, Caucasian, AfricanAmerican, Cau...
-## $ gender                   &lt;fct&gt; Female, Female, Female, Male, Male, Male, ...
-## $ age.group                &lt;fct&gt; [0-10), [10-20), [20-30), [30-40), [40-50)...
-## $ weight                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...
-## $ admission_typeid         &lt;int&gt; 6, 1, 1, 1, 1, 2, 3, 1, 2, 3, 1, 2, 1, 1, ...
-## $ discharge_disposition_id &lt;int&gt; 25, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 6,...
-## $ admission_source_id      &lt;int&gt; 1, 7, 7, 7, 7, 2, 2, 7, 4, 4, 7, 4, 7, 7, ...
-## $ time_in_hospital         &lt;int&gt; 1, 3, 2, 2, 1, 3, 4, 5, 13, 12, 9, 7, 7, 1...
-## $ payer_code               &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...
-## $ medical_specialty        &lt;fct&gt; Pediatrics-Endocrinology, NA, NA, NA, NA, ...
-## $ num_lab_procedures       &lt;int&gt; 41, 59, 11, 44, 51, 31, 70, 73, 68, 33, 47...
-## $ num_procedures           &lt;int&gt; 0, 0, 5, 1, 0, 6, 1, 0, 2, 3, 2, 0, 0, 1, ...
-## $ num_medications          &lt;int&gt; 1, 18, 13, 16, 8, 16, 21, 12, 28, 18, 17, ...
-## $ number_outpatient        &lt;int&gt; 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
-## $ number_emergency         &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, ...
-## $ number_inpatient         &lt;int&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
-## $ diag_1                   &lt;fct&gt; 250.83, 276, 648, 8, 197, 414, 414, 428, 3...
-## $ diag_2                   &lt;fct&gt; NA, 250.01, 250, 250.43, 157, 411, 411, 49...
-## $ diag_3                   &lt;fct&gt; NA, 255, V27, 403, 250, 250, V45, 250, 38,...
-## $ number_diagnoses         &lt;int&gt; 1, 9, 6, 7, 5, 9, 7, 8, 8, 8, 9, 7, 8, 8, ...
-## $ max_glu_serum            &lt;fct&gt; None, None, None, None, None, None, None, ...
-## $ A1Cresult                &lt;fct&gt; None, None, None, None, None, None, None, ...
-## $ metformin                &lt;fct&gt; No, No, No, No, No, No, Steady, No, No, No...
-## $ repaglinide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ nateglinide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ chlorpropamide           &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ glimepiride              &lt;fct&gt; No, No, No, No, No, No, Steady, No, No, No...
-## $ acetohexamide            &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ glipizide                &lt;fct&gt; No, No, Steady, No, Steady, No, No, No, St...
-## $ glyburide                &lt;fct&gt; No, No, No, No, No, No, No, Steady, No, No...
-## $ tolbutamide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ pioglitazone             &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ rosiglitazone            &lt;fct&gt; No, No, No, No, No, No, No, No, No, Steady...
-## $ acarbose                 &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ miglitol                 &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ troglitazone             &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ tolazamide               &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ examide                  &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ citoglipton              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ insulin                  &lt;fct&gt; No, Up, No, Up, Steady, Steady, Steady, No...
-## $ glyburide.metformin      &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ glipizide.metformin      &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ glimepiride.pioglitazone &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ metformin.rosiglitazone  &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ metformin.pioglitazone   &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
-## $ change                   &lt;fct&gt; No, Ch, No, Ch, Ch, No, Ch, No, Ch, Ch, No...
-## $ Med                      &lt;fct&gt; No, Yes, Yes, Yes, Yes, Yes, Yes, Yes, Yes...
-## $ label                    &lt;fct&gt; NO, &gt;5, NO, NO, NO, &gt;5, NO, &gt;5, NO, NO, &gt;5...</code></pre>
+<pre class="r"><code>dt_original  &lt;- read.csv(&quot;Blood_Pressure_data.csv&quot;, stringsAsFactors=TRUE)
+dt_original[dt_original==&quot;?&quot;] &lt;- NA</code></pre>
+<pre class="r"><code>skm_original &lt;- skimr::skim(dt_original)</code></pre>
+<p>Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as “717 patients visited 5 times”)</p>
+<pre class="r"><code>vv=sort(table(dt_original$patient_no),decreasing = T)
+sort(table(vv[vv&gt;4]),decreasing=T) %&gt;% as.data.frame() %&gt;% rename(Visits=Var1, &#39;No of Patients&#39; = Freq) %&gt;% select(`No of Patients`,Visits) %&gt;% as.matrix() %&gt;% huxtable::as_huxtable(add_colnames=T)    #DT::datatable(fillContainer=TRUE)</code></pre>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-3">
+<col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">No of Patients</th><th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Visits</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">717</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">346</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">207</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">7</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">111</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 70</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 42</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 20</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 19</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 14</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  9</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  6</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  6</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  5</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  4</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">19</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">23</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  2</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">21</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td></tr>
+</table>
+
+<p>Dataset health may be seen by following table:</p>
+<pre class="r"><code>skm_original %&gt;% filter(complete_rate&lt;0.999) %&gt;% 
+  select(skim_variable, n_missing, complete_rate, factor.n_unique) %&gt;% 
+  rename(Variable=skim_variable,Missings=n_missing,CompletenessRate=complete_rate,Uniques=factor.n_unique) %&gt;% 
+  arrange(CompletenessRate) %&gt;% huxtable::as_huxtable(add_colnames=T)</code></pre>
+<p><table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-4">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Variable</th><th style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Missings</th><th style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">CompletenessRate</th><th style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Uniques</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">weight</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">98569</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0314</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">medical_specialty</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">49949</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.509&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">72</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">payer_code</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40256</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.604&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">cast</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2273</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.978&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">diag_3</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1423</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.986&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">789</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">diag_2</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">358</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.996&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">748</td></tr>
+</table>
+ On the basis of above data health table and other Machine Learning considerations we drop certain columns and get a cleaned dataset.</p>
+<pre class="r"><code>dt &lt;- dt_original %&gt;% 
+  select(-c(id, weight, discharge_disposition_id, admission_source_id, patient_no, admission_typeid)) %&gt;%   # useless cols e.g. Id&#39;s and having more than 10 factors
+  select(-c(payer_code, medical_specialty)) %&gt;%   # high cardinality factor variables respectively 17 and 72
+  select(-c(diag_1, diag_2, diag_3)) %&gt;%   # useless because these contain integer and V## type mixed entries, factors are more than 700
+  select(-c(examide,citoglipton)) %&gt;%      # have only 1 factor throughout 
+  mutate(label=fct_recode(dt_original$label,YES=&quot;&gt;5&quot;,YES=&quot;&lt;30&quot;),
+         age.group=factor(age.group,ordered=T)
+         )</code></pre>
 <pre class="r"><code>skm &lt;- skimr::skim(dt)
 skm</code></pre>
 <table>
@@ -488,7 +516,7 @@ skm</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
-<td align="left">50</td>
+<td align="left">37</td>
 </tr>
 <tr class="even">
 <td align="left">_______________________</td>
@@ -500,11 +528,11 @@ skm</code></pre>
 </tr>
 <tr class="even">
 <td align="left">factor</td>
-<td align="left">37</td>
+<td align="left">29</td>
 </tr>
 <tr class="odd">
 <td align="left">numeric</td>
-<td align="left">13</td>
+<td align="left">8</td>
 </tr>
 <tr class="even">
 <td align="left">________________________</td>
@@ -518,14 +546,6 @@ skm</code></pre>
 </table>
 <p><strong>Variable type: factor</strong></p>
 <table>
-<colgroup>
-<col width="22%" />
-<col width="8%" />
-<col width="12%" />
-<col width="7%" />
-<col width="7%" />
-<col width="41%" />
-</colgroup>
 <thead>
 <tr class="header">
 <th align="left">skim_variable</th>
@@ -557,57 +577,9 @@ skm</code></pre>
 <td align="left">age.group</td>
 <td align="right">0</td>
 <td align="right">1.00</td>
-<td align="left">FALSE</td>
+<td align="left">TRUE</td>
 <td align="right">10</td>
 <td align="left">[70: 26068, [60: 22483, [50: 17256, [80: 17197</td>
-</tr>
-<tr class="even">
-<td align="left">weight</td>
-<td align="right">98569</td>
-<td align="right">0.03</td>
-<td align="left">FALSE</td>
-<td align="right">9</td>
-<td align="left">[75: 1336, [50: 897, [10: 625, [12: 145</td>
-</tr>
-<tr class="odd">
-<td align="left">payer_code</td>
-<td align="right">40256</td>
-<td align="right">0.60</td>
-<td align="left">FALSE</td>
-<td align="right">17</td>
-<td align="left">MC: 32439, HM: 6274, SP: 5007, BC: 4655</td>
-</tr>
-<tr class="even">
-<td align="left">medical_specialty</td>
-<td align="right">49949</td>
-<td align="right">0.51</td>
-<td align="left">FALSE</td>
-<td align="right">72</td>
-<td align="left">Int: 14635, Eme: 7565, Fam: 7440, Car: 5352</td>
-</tr>
-<tr class="odd">
-<td align="left">diag_1</td>
-<td align="right">21</td>
-<td align="right">1.00</td>
-<td align="left">FALSE</td>
-<td align="right">716</td>
-<td align="left">428: 6862, 414: 6581, 786: 4016, 410: 3614</td>
-</tr>
-<tr class="even">
-<td align="left">diag_2</td>
-<td align="right">358</td>
-<td align="right">1.00</td>
-<td align="left">FALSE</td>
-<td align="right">748</td>
-<td align="left">276: 6752, 428: 6662, 250: 6071, 427: 5036</td>
-</tr>
-<tr class="odd">
-<td align="left">diag_3</td>
-<td align="right">1423</td>
-<td align="right">0.99</td>
-<td align="left">FALSE</td>
-<td align="right">789</td>
-<td align="left">250: 11555, 401: 8289, 276: 5175, 428: 4577</td>
 </tr>
 <tr class="even">
 <td align="left">max_glu_serum</td>
@@ -746,22 +718,6 @@ skm</code></pre>
 <td align="left">No: 101727, Ste: 38, Up: 1</td>
 </tr>
 <tr class="odd">
-<td align="left">examide</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="left">FALSE</td>
-<td align="right">1</td>
-<td align="left">No: 101766</td>
-</tr>
-<tr class="even">
-<td align="left">citoglipton</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="left">FALSE</td>
-<td align="right">1</td>
-<td align="left">No: 101766</td>
-</tr>
-<tr class="odd">
 <td align="left">insulin</td>
 <td align="right">0</td>
 <td align="right">1.00</td>
@@ -830,26 +786,13 @@ skm</code></pre>
 <td align="right">0</td>
 <td align="right">1.00</td>
 <td align="left">FALSE</td>
-<td align="right">3</td>
-<td align="left">NO: 54864, &gt;5: 35545, &lt;30: 11357</td>
+<td align="right">2</td>
+<td align="left">NO: 54864, YES: 46902</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
 <table>
-<colgroup>
-<col width="15%" />
-<col width="6%" />
-<col width="8%" />
-<col width="8%" />
-<col width="8%" />
-<col width="3%" />
-<col width="5%" />
-<col width="6%" />
-<col width="6%" />
-<col width="6%" />
-<col width="25%" />
-</colgroup>
 <thead>
 <tr class="header">
 <th align="left">skim_variable</th>
@@ -867,71 +810,6 @@ skm</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">id</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">165201645.62</td>
-<td align="right">102640295.98</td>
-<td align="right">12522</td>
-<td align="right">84961194</td>
-<td align="right">152388987</td>
-<td align="right">230270888</td>
-<td align="right">443867222</td>
-<td align="left">▆▇▅▂▂</td>
-</tr>
-<tr class="even">
-<td align="left">patient_no</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">54330400.69</td>
-<td align="right">38696359.35</td>
-<td align="right">135</td>
-<td align="right">23413221</td>
-<td align="right">45505143</td>
-<td align="right">87545950</td>
-<td align="right">189502619</td>
-<td align="left">▇▆▆▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">admission_typeid</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2.02</td>
-<td align="right">1.45</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">3</td>
-<td align="right">8</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">discharge_disposition_id</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.72</td>
-<td align="right">5.28</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">28</td>
-<td align="left">▇▁▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">admission_source_id</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">5.75</td>
-<td align="right">4.06</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">7</td>
-<td align="right">7</td>
-<td align="right">25</td>
-<td align="left">▅▇▁▁▁</td>
-</tr>
-<tr class="even">
 <td align="left">time_in_hospital</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -944,7 +822,7 @@ skm</code></pre>
 <td align="right">14</td>
 <td align="left">▇▅▂▁▁</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">num_lab_procedures</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -957,7 +835,7 @@ skm</code></pre>
 <td align="right">132</td>
 <td align="left">▃▇▅▁▁</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">num_procedures</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -970,7 +848,7 @@ skm</code></pre>
 <td align="right">6</td>
 <td align="left">▇▂▁▁▁</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">num_medications</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -983,7 +861,7 @@ skm</code></pre>
 <td align="right">81</td>
 <td align="left">▇▃▁▁▁</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">number_outpatient</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -996,7 +874,7 @@ skm</code></pre>
 <td align="right">42</td>
 <td align="left">▇▁▁▁▁</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">number_emergency</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -1009,7 +887,7 @@ skm</code></pre>
 <td align="right">76</td>
 <td align="left">▇▁▁▁▁</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">number_inpatient</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -1022,7 +900,7 @@ skm</code></pre>
 <td align="right">21</td>
 <td align="left">▇▁▁▁▁</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">number_diagnoses</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -1037,139 +915,52 @@ skm</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as “717 patients visited 5 times”)</p>
-<pre class="r"><code>vv=sort(table(dt$patient_no),decreasing = T)
-sort(table(vv[vv&gt;4]),decreasing=T) %&gt;% as.data.frame() %&gt;% rename(Visits=Var1, &#39;No of Patients&#39; = Freq) %&gt;% select(`No of Patients`,Visits) %&gt;% as.matrix() %&gt;% huxtable::as_huxtable(add_colnames=T)    #DT::datatable(fillContainer=TRUE)</code></pre>
-<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-3">
-<col><col><tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">No of Patients</th><th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Visits</th></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">717</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">346</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">207</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">7</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">111</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 70</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 42</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 20</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 19</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 14</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  9</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  6</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  6</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  5</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  4</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">19</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">23</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  2</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">21</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td></tr>
-<tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td></tr>
-</table>
-
-<p>Dataset health may be seen by following table:</p>
-<pre class="r"><code>skm %&gt;% filter(complete_rate&lt;0.999) %&gt;% select(skim_variable, n_missing, complete_rate) %&gt;% arrange(complete_rate)</code></pre>
-<pre><code>## # A tibble: 6 x 3
-##   skim_variable     n_missing complete_rate
-##   &lt;chr&gt;                 &lt;int&gt;         &lt;dbl&gt;
-## 1 weight                98569        0.0314
-## 2 medical_specialty     49949        0.509 
-## 3 payer_code            40256        0.604 
-## 4 cast                   2273        0.978 
-## 5 diag_3                 1423        0.986 
-## 6 diag_2                  358        0.996</code></pre>
-<p>On the basis of above data health table and other Machine Learning considerations we drop certain columns and get a cleaned dataset.</p>
-<pre class="r"><code>dt %&gt;% 
-  select(-c(id, weight, discharge_disposition_id, admission_source_id)) %&gt;%   # useless cols e.g. Id&#39;s and having more than 10 factors
-  select(-c(diag_1, diag_2, diag_3)) %&gt;%   # useless because these contain integer and V## type mixed entries, factors are more than 700
-  select(-c(examide,citoglipton)) %&gt;%      # have only 1 factor througout 
-  mutate(label=fct_recode(dt$label,YES=&quot;&gt;5&quot;,YES=&quot;&lt;30&quot;)
-         
-         
-         ) %&gt;%  
-  head()</code></pre>
-<pre><code>##   patient_no            cast gender age.group admission_typeid time_in_hospital
-## 1    8222157       Caucasian Female    [0-10)                6                1
-## 2   55629189       Caucasian Female   [10-20)                1                3
-## 3   86047875 AfricanAmerican Female   [20-30)                1                2
-## 4   82442376       Caucasian   Male   [30-40)                1                2
-## 5   42519267       Caucasian   Male   [40-50)                1                1
-## 6   82637451       Caucasian   Male   [50-60)                2                3
-##   payer_code        medical_specialty num_lab_procedures num_procedures
-## 1       &lt;NA&gt; Pediatrics-Endocrinology                 41              0
-## 2       &lt;NA&gt;                     &lt;NA&gt;                 59              0
-## 3       &lt;NA&gt;                     &lt;NA&gt;                 11              5
-## 4       &lt;NA&gt;                     &lt;NA&gt;                 44              1
-## 5       &lt;NA&gt;                     &lt;NA&gt;                 51              0
-## 6       &lt;NA&gt;                     &lt;NA&gt;                 31              6
-##   num_medications number_outpatient number_emergency number_inpatient
-## 1               1                 0                0                0
-## 2              18                 0                0                0
-## 3              13                 2                0                1
-## 4              16                 0                0                0
-## 5               8                 0                0                0
-## 6              16                 0                0                0
-##   number_diagnoses max_glu_serum A1Cresult metformin repaglinide nateglinide
-## 1                1          None      None        No          No          No
-## 2                9          None      None        No          No          No
-## 3                6          None      None        No          No          No
-## 4                7          None      None        No          No          No
-## 5                5          None      None        No          No          No
-## 6                9          None      None        No          No          No
-##   chlorpropamide glimepiride acetohexamide glipizide glyburide tolbutamide
-## 1             No          No            No        No        No          No
-## 2             No          No            No        No        No          No
-## 3             No          No            No    Steady        No          No
-## 4             No          No            No        No        No          No
-## 5             No          No            No    Steady        No          No
-## 6             No          No            No        No        No          No
-##   pioglitazone rosiglitazone acarbose miglitol troglitazone tolazamide insulin
-## 1           No            No       No       No           No         No      No
-## 2           No            No       No       No           No         No      Up
-## 3           No            No       No       No           No         No      No
-## 4           No            No       No       No           No         No      Up
-## 5           No            No       No       No           No         No  Steady
-## 6           No            No       No       No           No         No  Steady
-##   glyburide.metformin glipizide.metformin glimepiride.pioglitazone
-## 1                  No                  No                       No
-## 2                  No                  No                       No
-## 3                  No                  No                       No
-## 4                  No                  No                       No
-## 5                  No                  No                       No
-## 6                  No                  No                       No
-##   metformin.rosiglitazone metformin.pioglitazone change Med label
-## 1                      No                     No     No  No    NO
-## 2                      No                     No     Ch Yes   YES
-## 3                      No                     No     No Yes    NO
-## 4                      No                     No     Ch Yes    NO
-## 5                      No                     No     Ch Yes    NO
-## 6                      No                     No     No Yes   YES</code></pre>
-<pre class="r"><code>names(skm)</code></pre>
-<pre><code>##  [1] &quot;skim_type&quot;         &quot;skim_variable&quot;     &quot;n_missing&quot;        
-##  [4] &quot;complete_rate&quot;     &quot;factor.ordered&quot;    &quot;factor.n_unique&quot;  
-##  [7] &quot;factor.top_counts&quot; &quot;numeric.mean&quot;      &quot;numeric.sd&quot;       
-## [10] &quot;numeric.p0&quot;        &quot;numeric.p25&quot;       &quot;numeric.p50&quot;      
-## [13] &quot;numeric.p75&quot;       &quot;numeric.p100&quot;      &quot;numeric.hist&quot;</code></pre>
+<p>Structure of the cleaned dataset is given below:</p>
+<pre class="r"><code>glimpse(dt)</code></pre>
+<pre><code>## Rows: 101,766
+## Columns: 37
+## $ cast                     &lt;fct&gt; Caucasian, Caucasian, AfricanAmerican, Cau...
+## $ gender                   &lt;fct&gt; Female, Female, Female, Male, Male, Male, ...
+## $ age.group                &lt;ord&gt; [0-10), [10-20), [20-30), [30-40), [40-50)...
+## $ time_in_hospital         &lt;int&gt; 1, 3, 2, 2, 1, 3, 4, 5, 13, 12, 9, 7, 7, 1...
+## $ num_lab_procedures       &lt;int&gt; 41, 59, 11, 44, 51, 31, 70, 73, 68, 33, 47...
+## $ num_procedures           &lt;int&gt; 0, 0, 5, 1, 0, 6, 1, 0, 2, 3, 2, 0, 0, 1, ...
+## $ num_medications          &lt;int&gt; 1, 18, 13, 16, 8, 16, 21, 12, 28, 18, 17, ...
+## $ number_outpatient        &lt;int&gt; 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ number_emergency         &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, ...
+## $ number_inpatient         &lt;int&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ number_diagnoses         &lt;int&gt; 1, 9, 6, 7, 5, 9, 7, 8, 8, 8, 9, 7, 8, 8, ...
+## $ max_glu_serum            &lt;fct&gt; None, None, None, None, None, None, None, ...
+## $ A1Cresult                &lt;fct&gt; None, None, None, None, None, None, None, ...
+## $ metformin                &lt;fct&gt; No, No, No, No, No, No, Steady, No, No, No...
+## $ repaglinide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ nateglinide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ chlorpropamide           &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glimepiride              &lt;fct&gt; No, No, No, No, No, No, Steady, No, No, No...
+## $ acetohexamide            &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glipizide                &lt;fct&gt; No, No, Steady, No, Steady, No, No, No, St...
+## $ glyburide                &lt;fct&gt; No, No, No, No, No, No, No, Steady, No, No...
+## $ tolbutamide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ pioglitazone             &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ rosiglitazone            &lt;fct&gt; No, No, No, No, No, No, No, No, No, Steady...
+## $ acarbose                 &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ miglitol                 &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ troglitazone             &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ tolazamide               &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ insulin                  &lt;fct&gt; No, Up, No, Up, Steady, Steady, Steady, No...
+## $ glyburide.metformin      &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glipizide.metformin      &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glimepiride.pioglitazone &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ metformin.rosiglitazone  &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ metformin.pioglitazone   &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ change                   &lt;fct&gt; No, Ch, No, Ch, Ch, No, Ch, No, Ch, Ch, No...
+## $ Med                      &lt;fct&gt; No, Yes, Yes, Yes, Yes, Yes, Yes, Yes, Yes...
+## $ label                    &lt;fct&gt; NO, YES, NO, NO, NO, YES, NO, YES, NO, NO,...</code></pre>
+<p>It is a almost balanced dataset in terms of classes:</p>
+<pre class="r"><code>table(dt$label)</code></pre>
+<pre><code>## 
+##   YES    NO 
+## 46902 54864</code></pre>
 
 
 

@@ -1,7 +1,5 @@
 ---
 # title: "Data Cleaning"
-# author: "Mahreen Athar"
-# date: "12/7/2020"
 output: html_document
 ---
 
@@ -41,6 +39,8 @@ dt.describe().round(2)
 
 
 ## Data Cleaning  
+for conversion of column types use  >>df['zipcode'] = df.zipcode.astype('category')  
+
 How many nulls in each column:
 ```{python}
 dt['weight'].isnull().sum()

@@ -9,9 +9,9 @@ library(tidyverse)
 ```
 Plan of the work:  
 
-- Delete unique ID, too many NAs, rows with label==NA and columns not interpretable/meaningful ones  
+- Delete columns having unique ID, too many NAs not interpretable/meaningful ones  
 
-- Lump all >5 and <30 labels as 'Yes'  
+- Lump all >5 and <30 labels as 'Yes', also delete the rows with label==NA 
 
 - Feature selection/importance and reduction  
 
@@ -21,13 +21,46 @@ Plan of the work:
 A glimpse into the structure of the dataset is given below:
 
 ```{r}
-dt  <- read.csv("Blood_Pressure_data.csv")
+dt  <- read.csv("Blood_Pressure_data.csv", stringsAsFactors=TRUE)
+dt[dt=="?"] <- NA
 glimpse(dt)
 ```
+
 ```{r}
-length(unique(dt$diag_3))
+skm <- skimr::skim(dt)
+skm
+```
+
+Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as "717 patients visited 5 times")
+```{r}
+vv=sort(table(dt$patient_no),decreasing = T)
+sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% rename(Visits=Var1, 'No of Patients' = Freq) %>% select(`No of Patients`,Visits) %>% as.matrix() %>% huxtable::as_huxtable(add_colnames=T)    #DT::datatable(fillContainer=TRUE)
+```
+
+Dataset health may be seen by following table:
+
+```{r}
+skm %>% filter(complete_rate<0.999) %>% select(skim_variable, n_missing, complete_rate) %>% arrange(complete_rate)
+```
+On the basis of above data health table and other Machine Learning considerations we drop certain columns and get a cleaned dataset. 
+
+```{r}
+dt %>% 
+  select(-c(id, weight, discharge_disposition_id, admission_source_id)) %>%   # useless cols e.g. Id's and having more than 10 factors
+  select(-c(diag_1, diag_2, diag_3)) %>%   # useless because these contain integer and V## type mixed entries, factors are more than 700
+  select(-c(examide,citoglipton)) %>%      # have only 1 factor througout 
+  mutate(label=fct_recode(dt$label,YES=">5",YES="<30")
+         
+         
+         ) %>%  
+  head()
+```
+
+
+```{r}
+names(skm)
 ```
 ```{r}
-skimr::skim(dt)
+
 ```
 

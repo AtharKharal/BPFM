@@ -412,69 +412,69 @@ div.tocify {
 
 <p>Plan of the work:</p>
 <ul>
-<li><p>Delete unique ID, too many NAs, rows with label==NA and columns not interpretable/meaningful ones</p></li>
-<li><p>Lump all &gt;5 and &lt;30 labels as ‘Yes’</p></li>
+<li><p>Delete columns having unique ID, too many NAs not interpretable/meaningful ones</p></li>
+<li><p>Lump all &gt;5 and &lt;30 labels as ‘Yes’, also delete the rows with label==NA</p></li>
 <li><p>Feature selection/importance and reduction</p></li>
 <li><p>May use RF, ANN and Naive Bayes</p></li>
 </ul>
 <p>A glimpse into the structure of the dataset is given below:</p>
-<pre class="r"><code>dt  &lt;- read.csv(&quot;Blood_Pressure_data.csv&quot;)
+<pre class="r"><code>dt  &lt;- read.csv(&quot;Blood_Pressure_data.csv&quot;, stringsAsFactors=TRUE)
+dt[dt==&quot;?&quot;] &lt;- NA
 glimpse(dt)</code></pre>
 <pre><code>## Rows: 101,766
 ## Columns: 50
 ## $ id                       &lt;int&gt; 2278392, 149190, 64410, 500364, 16680, 357...
 ## $ patient_no               &lt;int&gt; 8222157, 55629189, 86047875, 82442376, 425...
-## $ cast                     &lt;chr&gt; &quot;Caucasian&quot;, &quot;Caucasian&quot;, &quot;AfricanAmerican...
-## $ gender                   &lt;chr&gt; &quot;Female&quot;, &quot;Female&quot;, &quot;Female&quot;, &quot;Male&quot;, &quot;Mal...
-## $ age.group                &lt;chr&gt; &quot;[0-10)&quot;, &quot;[10-20)&quot;, &quot;[20-30)&quot;, &quot;[30-40)&quot;,...
-## $ weight                   &lt;chr&gt; &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?...
+## $ cast                     &lt;fct&gt; Caucasian, Caucasian, AfricanAmerican, Cau...
+## $ gender                   &lt;fct&gt; Female, Female, Female, Male, Male, Male, ...
+## $ age.group                &lt;fct&gt; [0-10), [10-20), [20-30), [30-40), [40-50)...
+## $ weight                   &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...
 ## $ admission_typeid         &lt;int&gt; 6, 1, 1, 1, 1, 2, 3, 1, 2, 3, 1, 2, 1, 1, ...
 ## $ discharge_disposition_id &lt;int&gt; 25, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 6,...
 ## $ admission_source_id      &lt;int&gt; 1, 7, 7, 7, 7, 2, 2, 7, 4, 4, 7, 4, 7, 7, ...
 ## $ time_in_hospital         &lt;int&gt; 1, 3, 2, 2, 1, 3, 4, 5, 13, 12, 9, 7, 7, 1...
-## $ payer_code               &lt;chr&gt; &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?...
-## $ medical_specialty        &lt;chr&gt; &quot;Pediatrics-Endocrinology&quot;, &quot;?&quot;, &quot;?&quot;, &quot;?&quot;,...
+## $ payer_code               &lt;fct&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...
+## $ medical_specialty        &lt;fct&gt; Pediatrics-Endocrinology, NA, NA, NA, NA, ...
 ## $ num_lab_procedures       &lt;int&gt; 41, 59, 11, 44, 51, 31, 70, 73, 68, 33, 47...
 ## $ num_procedures           &lt;int&gt; 0, 0, 5, 1, 0, 6, 1, 0, 2, 3, 2, 0, 0, 1, ...
 ## $ num_medications          &lt;int&gt; 1, 18, 13, 16, 8, 16, 21, 12, 28, 18, 17, ...
 ## $ number_outpatient        &lt;int&gt; 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
 ## $ number_emergency         &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, ...
 ## $ number_inpatient         &lt;int&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
-## $ diag_1                   &lt;chr&gt; &quot;250.83&quot;, &quot;276&quot;, &quot;648&quot;, &quot;8&quot;, &quot;197&quot;, &quot;414&quot;,...
-## $ diag_2                   &lt;chr&gt; &quot;?&quot;, &quot;250.01&quot;, &quot;250&quot;, &quot;250.43&quot;, &quot;157&quot;, &quot;41...
-## $ diag_3                   &lt;chr&gt; &quot;?&quot;, &quot;255&quot;, &quot;V27&quot;, &quot;403&quot;, &quot;250&quot;, &quot;250&quot;, &quot;V...
+## $ diag_1                   &lt;fct&gt; 250.83, 276, 648, 8, 197, 414, 414, 428, 3...
+## $ diag_2                   &lt;fct&gt; NA, 250.01, 250, 250.43, 157, 411, 411, 49...
+## $ diag_3                   &lt;fct&gt; NA, 255, V27, 403, 250, 250, V45, 250, 38,...
 ## $ number_diagnoses         &lt;int&gt; 1, 9, 6, 7, 5, 9, 7, 8, 8, 8, 9, 7, 8, 8, ...
-## $ max_glu_serum            &lt;chr&gt; &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;N...
-## $ A1Cresult                &lt;chr&gt; &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;N...
-## $ metformin                &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Stead...
-## $ repaglinide              &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ nateglinide              &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ chlorpropamide           &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ glimepiride              &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Stead...
-## $ acetohexamide            &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ glipizide                &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;Steady&quot;, &quot;No&quot;, &quot;Steady&quot;, &quot;No&quot;...
-## $ glyburide                &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ tolbutamide              &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ pioglitazone             &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ rosiglitazone            &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ acarbose                 &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ miglitol                 &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ troglitazone             &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ tolazamide               &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ examide                  &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ citoglipton              &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ insulin                  &lt;chr&gt; &quot;No&quot;, &quot;Up&quot;, &quot;No&quot;, &quot;Up&quot;, &quot;Steady&quot;, &quot;Steady&quot;...
-## $ glyburide.metformin      &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ glipizide.metformin      &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ glimepiride.pioglitazone &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ metformin.rosiglitazone  &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ metformin.pioglitazone   &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, ...
-## $ change                   &lt;chr&gt; &quot;No&quot;, &quot;Ch&quot;, &quot;No&quot;, &quot;Ch&quot;, &quot;Ch&quot;, &quot;No&quot;, &quot;Ch&quot;, ...
-## $ Med                      &lt;chr&gt; &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;...
-## $ label                    &lt;chr&gt; &quot;NO&quot;, &quot;&gt;5&quot;, &quot;NO&quot;, &quot;NO&quot;, &quot;NO&quot;, &quot;&gt;5&quot;, &quot;NO&quot;, ...</code></pre>
-<pre class="r"><code>length(unique(dt$diag_3))</code></pre>
-<pre><code>## [1] 790</code></pre>
-<pre class="r"><code>skimr::skim(dt)</code></pre>
+## $ max_glu_serum            &lt;fct&gt; None, None, None, None, None, None, None, ...
+## $ A1Cresult                &lt;fct&gt; None, None, None, None, None, None, None, ...
+## $ metformin                &lt;fct&gt; No, No, No, No, No, No, Steady, No, No, No...
+## $ repaglinide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ nateglinide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ chlorpropamide           &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glimepiride              &lt;fct&gt; No, No, No, No, No, No, Steady, No, No, No...
+## $ acetohexamide            &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glipizide                &lt;fct&gt; No, No, Steady, No, Steady, No, No, No, St...
+## $ glyburide                &lt;fct&gt; No, No, No, No, No, No, No, Steady, No, No...
+## $ tolbutamide              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ pioglitazone             &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ rosiglitazone            &lt;fct&gt; No, No, No, No, No, No, No, No, No, Steady...
+## $ acarbose                 &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ miglitol                 &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ troglitazone             &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ tolazamide               &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ examide                  &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ citoglipton              &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ insulin                  &lt;fct&gt; No, Up, No, Up, Steady, Steady, Steady, No...
+## $ glyburide.metformin      &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glipizide.metformin      &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ glimepiride.pioglitazone &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ metformin.rosiglitazone  &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ metformin.pioglitazone   &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No...
+## $ change                   &lt;fct&gt; No, Ch, No, Ch, Ch, No, Ch, No, Ch, Ch, No...
+## $ Med                      &lt;fct&gt; No, Yes, Yes, Yes, Yes, Yes, Yes, Yes, Yes...
+## $ label                    &lt;fct&gt; NO, &gt;5, NO, NO, NO, &gt;5, NO, &gt;5, NO, NO, &gt;5...</code></pre>
+<pre class="r"><code>skm &lt;- skimr::skim(dt)
+skm</code></pre>
 <table>
 <caption>Data summary</caption>
 <tbody>
@@ -499,7 +499,7 @@ glimpse(dt)</code></pre>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">character</td>
+<td align="left">factor</td>
 <td align="left">37</td>
 </tr>
 <tr class="odd">
@@ -516,390 +516,322 @@ glimpse(dt)</code></pre>
 </tr>
 </tbody>
 </table>
-<p><strong>Variable type: character</strong></p>
+<p><strong>Variable type: factor</strong></p>
 <table>
+<colgroup>
+<col width="22%" />
+<col width="8%" />
+<col width="12%" />
+<col width="7%" />
+<col width="7%" />
+<col width="41%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">skim_variable</th>
 <th align="right">n_missing</th>
 <th align="right">complete_rate</th>
-<th align="right">min</th>
-<th align="right">max</th>
-<th align="right">empty</th>
+<th align="left">ordered</th>
 <th align="right">n_unique</th>
-<th align="right">whitespace</th>
+<th align="left">top_counts</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">cast</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">15</td>
-<td align="right">0</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">2273</td>
+<td align="right">0.98</td>
+<td align="left">FALSE</td>
+<td align="right">5</td>
+<td align="left">Cau: 76099, Afr: 19210, His: 2037, Oth: 1506</td>
 </tr>
 <tr class="even">
 <td align="left">gender</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">15</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">3</td>
-<td align="right">0</td>
+<td align="left">Fem: 54708, Mal: 47055, Unk: 3</td>
 </tr>
 <tr class="odd">
 <td align="left">age.group</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">6</td>
-<td align="right">8</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">10</td>
-<td align="right">0</td>
+<td align="left">[70: 26068, [60: 22483, [50: 17256, [80: 17197</td>
 </tr>
 <tr class="even">
 <td align="left">weight</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="right">98569</td>
+<td align="right">0.03</td>
+<td align="left">FALSE</td>
 <td align="right">9</td>
-<td align="right">0</td>
-<td align="right">10</td>
-<td align="right">0</td>
+<td align="left">[75: 1336, [50: 897, [10: 625, [12: 145</td>
 </tr>
 <tr class="odd">
 <td align="left">payer_code</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">18</td>
-<td align="right">0</td>
+<td align="right">40256</td>
+<td align="right">0.60</td>
+<td align="left">FALSE</td>
+<td align="right">17</td>
+<td align="left">MC: 32439, HM: 6274, SP: 5007, BC: 4655</td>
 </tr>
 <tr class="even">
 <td align="left">medical_specialty</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">36</td>
-<td align="right">0</td>
-<td align="right">73</td>
-<td align="right">0</td>
+<td align="right">49949</td>
+<td align="right">0.51</td>
+<td align="left">FALSE</td>
+<td align="right">72</td>
+<td align="left">Int: 14635, Eme: 7565, Fam: 7440, Car: 5352</td>
 </tr>
 <tr class="odd">
 <td align="left">diag_1</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">717</td>
-<td align="right">0</td>
+<td align="right">21</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">716</td>
+<td align="left">428: 6862, 414: 6581, 786: 4016, 410: 3614</td>
 </tr>
 <tr class="even">
 <td align="left">diag_2</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">749</td>
-<td align="right">0</td>
+<td align="right">358</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
+<td align="right">748</td>
+<td align="left">276: 6752, 428: 6662, 250: 6071, 427: 5036</td>
 </tr>
 <tr class="odd">
 <td align="left">diag_3</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">790</td>
-<td align="right">0</td>
+<td align="right">1423</td>
+<td align="right">0.99</td>
+<td align="left">FALSE</td>
+<td align="right">789</td>
+<td align="left">250: 11555, 401: 8289, 276: 5175, 428: 4577</td>
 </tr>
 <tr class="even">
 <td align="left">max_glu_serum</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">0</td>
+<td align="left">Non: 96420, Nor: 2597, &gt;20: 1485, &gt;30: 1264</td>
 </tr>
 <tr class="odd">
 <td align="left">A1Cresult</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">0</td>
+<td align="left">Non: 84748, &gt;8: 8216, Nor: 4990, &gt;7: 3812</td>
 </tr>
 <tr class="even">
 <td align="left">metformin</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 81778, Ste: 18346, Up: 1067, Dow: 575</td>
 </tr>
 <tr class="odd">
 <td align="left">repaglinide</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 100227, Ste: 1384, Up: 110, Dow: 45</td>
 </tr>
 <tr class="even">
 <td align="left">nateglinide</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 101063, Ste: 668, Up: 24, Dow: 11</td>
 </tr>
 <tr class="odd">
 <td align="left">chlorpropamide</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 101680, Ste: 79, Up: 6, Dow: 1</td>
 </tr>
 <tr class="even">
 <td align="left">glimepiride</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 96575, Ste: 4670, Up: 327, Dow: 194</td>
 </tr>
 <tr class="odd">
 <td align="left">acetohexamide</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 101765, Ste: 1</td>
 </tr>
 <tr class="even">
 <td align="left">glipizide</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 89080, Ste: 11356, Up: 770, Dow: 560</td>
 </tr>
 <tr class="odd">
 <td align="left">glyburide</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 91116, Ste: 9274, Up: 812, Dow: 564</td>
 </tr>
 <tr class="even">
 <td align="left">tolbutamide</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 101743, Ste: 23</td>
 </tr>
 <tr class="odd">
 <td align="left">pioglitazone</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 94438, Ste: 6976, Up: 234, Dow: 118</td>
 </tr>
 <tr class="even">
 <td align="left">rosiglitazone</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 95401, Ste: 6100, Up: 178, Dow: 87</td>
 </tr>
 <tr class="odd">
 <td align="left">acarbose</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 101458, Ste: 295, Up: 10, Dow: 3</td>
 </tr>
 <tr class="even">
 <td align="left">miglitol</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 101728, Ste: 31, Dow: 5, Up: 2</td>
 </tr>
 <tr class="odd">
 <td align="left">troglitazone</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 101763, Ste: 3</td>
 </tr>
 <tr class="even">
 <td align="left">tolazamide</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">3</td>
-<td align="right">0</td>
+<td align="left">No: 101727, Ste: 38, Up: 1</td>
 </tr>
 <tr class="odd">
 <td align="left">examide</td>
 <td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">1</td>
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
+<td align="left">No: 101766</td>
 </tr>
 <tr class="even">
 <td align="left">citoglipton</td>
 <td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">1</td>
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
+<td align="left">No: 101766</td>
 </tr>
 <tr class="odd">
 <td align="left">insulin</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 47383, Ste: 30849, Dow: 12218, Up: 11316</td>
 </tr>
 <tr class="even">
 <td align="left">glyburide.metformin</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">4</td>
-<td align="right">0</td>
+<td align="left">No: 101060, Ste: 692, Up: 8, Dow: 6</td>
 </tr>
 <tr class="odd">
 <td align="left">glipizide.metformin</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 101753, Ste: 13</td>
 </tr>
 <tr class="even">
 <td align="left">glimepiride.pioglitazone</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 101765, Ste: 1</td>
 </tr>
 <tr class="odd">
 <td align="left">metformin.rosiglitazone</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 101764, Ste: 2</td>
 </tr>
 <tr class="even">
 <td align="left">metformin.pioglitazone</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 101765, Ste: 1</td>
 </tr>
 <tr class="odd">
 <td align="left">change</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">No: 54755, Ch: 47011</td>
 </tr>
 <tr class="even">
 <td align="left">Med</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">2</td>
-<td align="right">3</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
+<td align="left">Yes: 78363, No: 23403</td>
 </tr>
 <tr class="odd">
 <td align="left">label</td>
 <td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2</td>
+<td align="right">1.00</td>
+<td align="left">FALSE</td>
 <td align="right">3</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">0</td>
+<td align="left">NO: 54864, &gt;5: 35545, &lt;30: 11357</td>
 </tr>
 </tbody>
 </table>
@@ -1105,6 +1037,139 @@ glimpse(dt)</code></pre>
 </tr>
 </tbody>
 </table>
+<p>Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as “717 patients visited 5 times”)</p>
+<pre class="r"><code>vv=sort(table(dt$patient_no),decreasing = T)
+sort(table(vv[vv&gt;4]),decreasing=T) %&gt;% as.data.frame() %&gt;% rename(Visits=Var1, &#39;No of Patients&#39; = Freq) %&gt;% select(`No of Patients`,Visits) %&gt;% as.matrix() %&gt;% huxtable::as_huxtable(add_colnames=T)    #DT::datatable(fillContainer=TRUE)</code></pre>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:unnamed-chunk-3">
+<col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">No of Patients</th><th style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Visits</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">717</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">346</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">207</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">7</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">111</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 70</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 42</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 20</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 19</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> 14</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  9</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  6</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  6</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  5</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  4</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">19</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  3</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">23</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  2</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">21</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">  1</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td></tr>
+</table>
+
+<p>Dataset health may be seen by following table:</p>
+<pre class="r"><code>skm %&gt;% filter(complete_rate&lt;0.999) %&gt;% select(skim_variable, n_missing, complete_rate) %&gt;% arrange(complete_rate)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   skim_variable     n_missing complete_rate
+##   &lt;chr&gt;                 &lt;int&gt;         &lt;dbl&gt;
+## 1 weight                98569        0.0314
+## 2 medical_specialty     49949        0.509 
+## 3 payer_code            40256        0.604 
+## 4 cast                   2273        0.978 
+## 5 diag_3                 1423        0.986 
+## 6 diag_2                  358        0.996</code></pre>
+<p>On the basis of above data health table and other Machine Learning considerations we drop certain columns and get a cleaned dataset.</p>
+<pre class="r"><code>dt %&gt;% 
+  select(-c(id, weight, discharge_disposition_id, admission_source_id)) %&gt;%   # useless cols e.g. Id&#39;s and having more than 10 factors
+  select(-c(diag_1, diag_2, diag_3)) %&gt;%   # useless because these contain integer and V## type mixed entries, factors are more than 700
+  select(-c(examide,citoglipton)) %&gt;%      # have only 1 factor througout 
+  mutate(label=fct_recode(dt$label,YES=&quot;&gt;5&quot;,YES=&quot;&lt;30&quot;)
+         
+         
+         ) %&gt;%  
+  head()</code></pre>
+<pre><code>##   patient_no            cast gender age.group admission_typeid time_in_hospital
+## 1    8222157       Caucasian Female    [0-10)                6                1
+## 2   55629189       Caucasian Female   [10-20)                1                3
+## 3   86047875 AfricanAmerican Female   [20-30)                1                2
+## 4   82442376       Caucasian   Male   [30-40)                1                2
+## 5   42519267       Caucasian   Male   [40-50)                1                1
+## 6   82637451       Caucasian   Male   [50-60)                2                3
+##   payer_code        medical_specialty num_lab_procedures num_procedures
+## 1       &lt;NA&gt; Pediatrics-Endocrinology                 41              0
+## 2       &lt;NA&gt;                     &lt;NA&gt;                 59              0
+## 3       &lt;NA&gt;                     &lt;NA&gt;                 11              5
+## 4       &lt;NA&gt;                     &lt;NA&gt;                 44              1
+## 5       &lt;NA&gt;                     &lt;NA&gt;                 51              0
+## 6       &lt;NA&gt;                     &lt;NA&gt;                 31              6
+##   num_medications number_outpatient number_emergency number_inpatient
+## 1               1                 0                0                0
+## 2              18                 0                0                0
+## 3              13                 2                0                1
+## 4              16                 0                0                0
+## 5               8                 0                0                0
+## 6              16                 0                0                0
+##   number_diagnoses max_glu_serum A1Cresult metformin repaglinide nateglinide
+## 1                1          None      None        No          No          No
+## 2                9          None      None        No          No          No
+## 3                6          None      None        No          No          No
+## 4                7          None      None        No          No          No
+## 5                5          None      None        No          No          No
+## 6                9          None      None        No          No          No
+##   chlorpropamide glimepiride acetohexamide glipizide glyburide tolbutamide
+## 1             No          No            No        No        No          No
+## 2             No          No            No        No        No          No
+## 3             No          No            No    Steady        No          No
+## 4             No          No            No        No        No          No
+## 5             No          No            No    Steady        No          No
+## 6             No          No            No        No        No          No
+##   pioglitazone rosiglitazone acarbose miglitol troglitazone tolazamide insulin
+## 1           No            No       No       No           No         No      No
+## 2           No            No       No       No           No         No      Up
+## 3           No            No       No       No           No         No      No
+## 4           No            No       No       No           No         No      Up
+## 5           No            No       No       No           No         No  Steady
+## 6           No            No       No       No           No         No  Steady
+##   glyburide.metformin glipizide.metformin glimepiride.pioglitazone
+## 1                  No                  No                       No
+## 2                  No                  No                       No
+## 3                  No                  No                       No
+## 4                  No                  No                       No
+## 5                  No                  No                       No
+## 6                  No                  No                       No
+##   metformin.rosiglitazone metformin.pioglitazone change Med label
+## 1                      No                     No     No  No    NO
+## 2                      No                     No     Ch Yes   YES
+## 3                      No                     No     No Yes    NO
+## 4                      No                     No     Ch Yes    NO
+## 5                      No                     No     Ch Yes    NO
+## 6                      No                     No     No Yes   YES</code></pre>
+<pre class="r"><code>names(skm)</code></pre>
+<pre><code>##  [1] &quot;skim_type&quot;         &quot;skim_variable&quot;     &quot;n_missing&quot;        
+##  [4] &quot;complete_rate&quot;     &quot;factor.ordered&quot;    &quot;factor.n_unique&quot;  
+##  [7] &quot;factor.top_counts&quot; &quot;numeric.mean&quot;      &quot;numeric.sd&quot;       
+## [10] &quot;numeric.p0&quot;        &quot;numeric.p25&quot;       &quot;numeric.p50&quot;      
+## [13] &quot;numeric.p75&quot;       &quot;numeric.p100&quot;      &quot;numeric.hist&quot;</code></pre>
 
 
 

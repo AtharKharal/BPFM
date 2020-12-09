@@ -1,7 +1,5 @@
 ---
 # title: "Task Statement"
-# author: "Mahreen Athar"
-# date: "12/7/2020"
 output: html_document
 ---
 

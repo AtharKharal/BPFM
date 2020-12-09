@@ -39,7 +39,11 @@ dt.describe().round(2)
 
 
 ## Data Cleaning  
-for conversion of column types use  >>df['zipcode'] = df.zipcode.astype('category')  
+for conversion of column types use  
+>>> df['zipcode'] = df.zipcode.astype('category')  
+>>> import dtale
+>>> import pandas as pd
+>>> dtale.show(pd.read_csv("titanic.csv"))
 
 How many nulls in each column:
 ```{python}

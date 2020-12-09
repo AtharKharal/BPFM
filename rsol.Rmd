@@ -66,7 +66,7 @@ Structure of the cleaned dataset is given below:
 glimpse(dt)
 ```
 
-It is a almost balanced dataset in terms of classes:
+It is an almost balanced dataset in terms of classes:
 ```{r}
 table(dt$label)
 ```

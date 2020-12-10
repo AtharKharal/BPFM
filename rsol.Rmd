@@ -101,14 +101,41 @@ mm <- sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% as.matrix()
 dimnames(mm) <- list(c(),c('Visits', 'No of Patients'))
 mm %>% as_huxtable(add_colnames=T) %>% set_top_border(row = 2)
 ```
+  
+## Vital Statistics for Numerical Variables  
+  
+```{r}
+ExpNumStat(dt,by="G",gp="label",Qnt=seq(0,1,0.1),MesofShape=2,Outlier=TRUE,round=2)
+```
+
+### Information Value of Variables  
 
 ```{r}
-ExpNumViz(dt)
+ExpCatStat(dt,Target="label",result = "IV",clim=10,nlim=5,bins=10,Pclass="Yes",plot=FALSE,top=20,Round=2)
+```
+
+```{r}
+ExpCatStat(dt,Target="label",result = "Stat",clim=10,nlim=5,bins=10,Pclass="Yes",plot=FALSE,top=20,Round=2)
 ```
 
 
+## Vislaizations for Numeric Variables vs. Target Variables  
 
 ```{r}
-ExpCatViz(dt)
+ ExpNumViz(dt, target = "label", 
+           type =2, 
+           nlim=3,
+           col=c("springgreen1", "red1")
+           )
+```
+  
+  
+
+```{r}
+ExpCatStat(dt,Target = "label")
+```
+
+```{r}
+ExpCatViz(dt, target = "label", col=c("springgreen1", "red1"))
 ```
 

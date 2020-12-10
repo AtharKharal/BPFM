@@ -7,17 +7,10 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(huxtable)
+library(SmartEDA)
 ```
-Plan of the work:  
-
-- Delete columns having unique ID, too many NAs not interpretable/meaningful ones  
-
-- Lump all >5 and <30 labels as 'Yes', also delete the rows with label==NA 
-
-- Feature selection/importance and reduction  
-
-- May use RF, ANN and Naive Bayes  
-
+# Data Cleaning  
+  
 ## Original Dataset  
 
 A glimpse into 100 random rows of the dataset is given below:  
@@ -27,7 +20,7 @@ dt_original  <- read.csv("Blood_Pressure_data.csv", stringsAsFactors=TRUE)
 DT::datatable(dt_original[sample(nrow(dt_original),100),])
 ```
   
-### Structure of Original Data  
+### Structure (Original)  
   
 Structure of the dataset is given below:
 
@@ -81,7 +74,7 @@ dt <- dt_original %>%
 skm <- skimr::skim(dt)
 skm
 ```
-### Structure of Cleaned Data  
+### Structure (Cleaned)  
 
 Structure of the cleaned dataset is given below:
 ```{r}
@@ -96,4 +89,26 @@ table(dt$label) %>% as.data.frame() %>% rename(Label=Var1) %>%  as_huxtable(add_
 ```
   
 Difference of 7962 between YES and NO is negligible because the total available labels are 101766.  
+
+# Exploratory Data Analysis  
+  
+## High Frequency Visitors  
+
+Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as "717 patients visited 5 times")
+```{r}
+vv=sort(table(dt_original$patient_no),decreasing = T)
+mm <- sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% as.matrix() 
+dimnames(mm) <- list(c(),c('Visits', 'No of Patients'))
+mm %>% as_huxtable(add_colnames=T) %>% set_top_border(row = 2)
+```
+
+```{r}
+ExpNumViz(dt)
+```
+
+
+
+```{r}
+ExpCatViz(dt)
+```
 

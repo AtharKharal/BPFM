@@ -4,8 +4,9 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
+library(huxtable)
 ```
 Plan of the work:  
 
@@ -17,33 +18,52 @@ Plan of the work:
 
 - May use RF, ANN and Naive Bayes  
 
+## Original Dataset  
 
-A glimpse into the structure of the dataset is given below:
+A glimpse into 100 random rows of the dataset is given below:  
 
 ```{r}
 dt_original  <- read.csv("Blood_Pressure_data.csv", stringsAsFactors=TRUE)
+DT::datatable(dt_original[sample(nrow(dt_original),100),])
+```
+  
+### Structure of Original Data  
+  
+Structure of the dataset is given below:
+
+```{r}
+glimpse(dt_original)
 dt_original[dt_original=="?"] <- NA
 ```
 
-```{r}
-skm_original <- skimr::skim(dt_original)
-```
-
-Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as "717 patients visited 5 times")
-```{r}
-vv=sort(table(dt_original$patient_no),decreasing = T)
-sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% rename(Visits=Var1, 'No of Patients' = Freq) %>% select(`No of Patients`,Visits) %>% as.matrix() %>% huxtable::as_huxtable(add_colnames=T)    #DT::datatable(fillContainer=TRUE)
-```
+## Health of Variables  
 
 Dataset health may be seen by following table:
 
 ```{r}
-skm_original %>% filter(complete_rate<0.999) %>% 
+skm_original <- skimr::skim(dt_original)
+skm_original %>% filter(complete_rate<0.999999) %>% 
   select(skim_variable, n_missing, complete_rate, factor.n_unique) %>% 
   rename(Variable=skim_variable,Missings=n_missing,CompletenessRate=complete_rate,Uniques=factor.n_unique) %>% 
-  arrange(CompletenessRate) %>% huxtable::as_huxtable(add_colnames=T)
+  arrange(CompletenessRate) %>% 
+  as_huxtable(add_colnames=T) %>% set_top_border(row=2, value = 0.4)
 ```
-On the basis of above data health table and other Machine Learning considerations we drop certain columns and get a cleaned dataset. 
+
+## Cleaning Tasks  
+On the basis of above data health table and other Machine Learning considerations we drop certain columns and also apply a transformation on label variable. Details of these cleaning steps are as follows:  
+
+- Replace all "?" with NA (Not Available).  
+
+- Variables: *id, weight, discharge_disposition_id, admission_source_id, patient_no and admission_typeid* are useless because of having more than 10 factors   
+- Variables *payer_code and medical_specialty* have very high number of factors 17 and 72, respectively.  Moreover they contain integer and alphanumeric factors simultaneously.  
+
+- *examide and citoglipton* have only 1 factor throughout i.e. have 0 variance  
+
+- Factors '>5' and '<30' have been lumped together in new category named 'YES'.
+
+- Variable age.group has been designated as an ordinal categorical variable.  
+
+## Cleaned Dataset  
 
 ```{r}
 dt <- dt_original %>% 
@@ -61,13 +81,19 @@ dt <- dt_original %>%
 skm <- skimr::skim(dt)
 skm
 ```
+### Structure of Cleaned Data  
+
 Structure of the cleaned dataset is given below:
 ```{r}
 glimpse(dt)
 ```
 
+## Class Balance  
+
 It is an almost balanced dataset in terms of classes:
 ```{r}
-table(dt$label)
+table(dt$label) %>% as.data.frame() %>% rename(Label=Var1) %>%  as_huxtable(add_colnames=T) %>% set_top_border(row=2, value = 0.4)
 ```
+  
+Difference of 7962 between YES and NO is negligible because the total available labels are 101766.  
 

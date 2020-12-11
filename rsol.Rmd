@@ -8,6 +8,9 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(huxtable)
 library(SmartEDA)
+library(mlr3verse)
+library(mlr3learners)
+library(mlr3viz)
 ```
 # Data Cleaning  
   
@@ -70,16 +73,6 @@ dt <- dt_original %>%
 ```
 
 
-```{r}
-skm <- skimr::skim(dt)
-skm
-```
-### Structure (Cleaned)  
-
-Structure of the cleaned dataset is given below:
-```{r}
-glimpse(dt)
-```
 
 ## Class Balance  
 
@@ -101,41 +94,85 @@ mm <- sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% as.matrix()
 dimnames(mm) <- list(c(),c('Visits', 'No of Patients'))
 mm %>% as_huxtable(add_colnames=T) %>% set_top_border(row = 2)
 ```
-  
-## Vital Statistics for Numerical Variables  
-  
+
+## Vislaizations for Factor Variables vs. Target Variables  
+ Following visualizations help to decide visually about the variation present in each variable and hence its elimination or otherwise. As a result of these visualizations we decided to delete following variables:  
+ 
+* repaglinide, nateglinide, chlorpropamide, acetohexamide, tolbutamide, acarbose, miglitol, troglitazone, tolazamide, glyburide, glipizide, glimepiride.pioglitazone, metformin, metformin.pioglitazone, metformin.rosiglitazone,  *
 ```{r}
-ExpNumStat(dt,by="G",gp="label",Qnt=seq(0,1,0.1),MesofShape=2,Outlier=TRUE,round=2)
+ ExpCatViz(dt, target = NULL, 
+           col=c("springgreen1", "red1")
+           )
+```
+```{r}
+dt <- dt %>% select(-c(repaglinide, nateglinide, chlorpropamide, acetohexamide, tolbutamide, acarbose, miglitol, troglitazone, tolazamide, glyburide, glipizide, glimepiride.pioglitazone, metformin, metformin.pioglitazone, metformin.rosiglitazone, glipizide.metformin))
 ```
 
-### Information Value of Variables  
+### Structure (Cleaned)  
+
+Structure of the cleaned dataset is given below:
 
 ```{r}
-ExpCatStat(dt,Target="label",result = "IV",clim=10,nlim=5,bins=10,Pclass="Yes",plot=FALSE,top=20,Round=2)
+skimr::skim(dt)
 ```
+A glimpse of the actual values afer all cleaning is as follows:  
 
 ```{r}
-ExpCatStat(dt,Target="label",result = "Stat",clim=10,nlim=5,bins=10,Pclass="Yes",plot=FALSE,top=20,Round=2)
+glimpse(dt)
 ```
 
 
 ## Vislaizations for Numeric Variables vs. Target Variables  
 
+Three numeric variables appear to be of less variation namely: *number_outpatient , number_emergency, number_inpatient*. But we decide to keep these for the time being as we already have a smaller number of numeric variables i.e. 8.
 ```{r}
- ExpNumViz(dt, target = "label", 
+ ExpNumViz(dt, target = 'label', 
            type =2, 
            nlim=3,
            col=c("springgreen1", "red1")
            )
 ```
   
+```{r}
+# write_csv(dt,"dt_cleaned.csv")
+# saveRDS(dt,'dt_cleaned.R')
+```
   
+# Model Development  
 
 ```{r}
-ExpCatStat(dt,Target = "label")
+# Make a task 
+#dt = read_rds('dt_cleaned.R')
+dt = read_csv('dt_cleaned.csv',col_types = 'ffciiiiiiiiffffffffff' )
+dt <- dt %>% mutate(age.group=factor(age.group, ordered = T))
+tk <- TaskClassif$new(id = 'tsk_dt', backend = dt, target = 'label')
+
+learners = list(
+   lrn('classif.kknn'), lrn('classif.log_reg'), lrn('classif.naive_bayes'),
+   lrn('classif.lda'), lrn('classif.ranger'), lrn('classif.rpart'),
+   GraphLearner$new(po('encode') %>>% lrn('classif.xgboost'),id = 'xgboost')
+ )
+
+
+design = benchmark_grid(tasks = tk, learners = learners,
+                        resamplings = rsmp('cv', folds = 10L))
+
+# bmr = benchmark(design, store_models = TRUE)
+
+# saveRDS(bmr,'benchmark_results.R')
+# 
+# bmr_retrieved = readRDS('benchmark_results.R')
+# bmr_rslt = bmr_retrieved$aggregate(msr('classif.acc')) %>%
+#   arrange(desc(classif.acc)) %>%
+#   select(-c(resample_result, resampling_id, iters,nr))
+# # Benchmarking results are given below:
+# bmr_rslt %>% 
+#   pivot_wider(id_cols = 'learner_id', names_from = 'task_id', values_from = 'classif.acc')
+
+```
+  
+```{r}
+glimpse(dt)
 ```
 
-```{r}
-ExpCatViz(dt, target = "label", col=c("springgreen1", "red1"))
-```
 

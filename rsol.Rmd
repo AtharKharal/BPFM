@@ -143,19 +143,79 @@ Three numeric variables appear to be of less variation namely: *number_outpatien
 ```{r}
 # Make a task 
 #dt = read_rds('dt_cleaned.R')
-dt = read_csv('dt_cleaned.csv',col_types = 'ffciiiiiiiiffffffffff' )
-dt <- dt %>% mutate(age.group=factor(age.group, ordered = T))
+dt = read_csv('dt_cleaned.csv',col_types = 'fffiiiiiiiiffffffffff' )  # 'fffiiiiiiiiffffffffff'
+# dt <- dt %>% mutate(age.group=factor(age.group, ordered = T))
 tk <- TaskClassif$new(id = 'tsk_dt', backend = dt, target = 'label')
+```
 
-learners = list(
-   lrn('classif.kknn'), lrn('classif.log_reg'), lrn('classif.naive_bayes'),
-   lrn('classif.lda'), lrn('classif.ranger'), lrn('classif.rpart'),
-   GraphLearner$new(po('encode') %>>% lrn('classif.xgboost'),id = 'xgboost')
- )
+## Naive Baye's Model  
+
+```{r}
+lrn_naive_bayes = lrn("classif.naive_bayes")
+lrn_naive_bayes$train(tk, row_ids = sample(nrow(dt),size = 90000) )
+prd_naive_bayes = lrn_naive_bayes$predict(tk, row_ids = sample(nrow(dt), size = 1000))
+
+lrn_naive_bayes$model
+```
+Performance of Naive Baye's Model is as follows: 
+
+```{r}
+print(paste0("Accuracy = ", prd_naive_bayes$score(msr("classif.acc"))))
+print(paste0("F score = ", prd_naive_bayes$score(msr("classif.fbeta"))))
+```
+
+## Random Forest Model  
+```{r}
+lrn_ranger = lrn("classif.ranger")
+lrn_ranger$train(tk, row_ids = sample(nrow(dt),size = 90000) )
+prd_ranger = lrn_ranger$predict(tk, row_ids = sample(nrow(dt), size = 1000))
+
+lrn_ranger$model
+
+# GraphLearner$new(po('encode') %>>% lrn('classif.svm'),id = 'svm')
+# GraphLearner$new(po('encode') %>>% lrn('classif.xgboost'),id = 'xgboost')
+```
+
+Performance and Confusion Matrix of Random Forest model is as follows: 
+```{r}
+print(paste0("Accuracy = ", prd_ranger$score(msr("classif.acc"))))
+print(paste0("F score = ", prd_ranger$score(msr("classif.fbeta"))))
+lrn_ranger$model$confusion.matrix
+```
 
 
-design = benchmark_grid(tasks = tk, learners = learners,
-                        resamplings = rsmp('cv', folds = 10L))
+## Decision Trees  
+
+```{r}
+lrn_rpart = lrn('classif.rpart')
+lrn_rpart$train(tk, row_ids = sample(nrow(dt),size = 90000) )
+prd_rpart = lrn_rpart$predict(tk, row_ids = sample(nrow(dt), size = 1000))
+lrn_rpart$model
+```
+
+Performance of Decision Tree Model is given as :  
+```{r}
+print(paste0("Accuracy = ", prd_rpart$score(msr("classif.acc"))))
+print(paste0("F score = ", prd_rpart$score(msr("classif.fbeta"))))
+```
+
+
+```{r}
+lrns()
+msrs()
+```
+
+
+```{r}
+# learners = list(
+#    lrn('classif.kknn'), lrn('classif.log_reg'), lrn('classif.naive_bayes'),
+#    lrn('classif.lda'), lrn('classif.ranger'), lrn('classif.rpart'),
+#    GraphLearner$new(po('encode') %>>% lrn('classif.xgboost'),id = 'xgboost')
+#  )
+# 
+# 
+# design = benchmark_grid(tasks = tk, learners = learners,
+#                         resamplings = rsmp('cv', folds = 10L))
 
 # bmr = benchmark(design, store_models = TRUE)
 

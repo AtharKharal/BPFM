@@ -5,22 +5,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-library(tidyverse)
-library(huxtable)
-# library(reticulate)
+# library(tidyverse)
+# library(huxtable)
+library(reticulate)
 ```
 
-```{r}
-dt_original  <- read.csv("Blood_Pressure_data.csv", stringsAsFactors=TRUE)
+```{python}
+# matplotlib.pyplot.bar(x, height, width=0.8, bottom=None, *, align='center', data=None, **kwargs)
 ```
 
-
-##Visit Frequencies  
-
-Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88785891 has visited 40 times. Other visit frequencies are given below (for example first entry is to be read as "717 patients visited 5 times")
-```{r}
-vv=sort(table(dt_original$patient_no),decreasing = T)
-mm <- sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% as.matrix() 
-dimnames(mm) <- list(c(),c('Visits', 'No of Patients'))
-mm %>% huxtable::as_huxtable(add_colnames=T) %>% set_top_border(row = 2, value=3)
-```

@@ -14,7 +14,7 @@
 <title>cleaning.utf8</title>
 
 <script src="site_libs/header-attrs-2.5.3/header-attrs.js"></script>
-<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -28,14 +28,6 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
 <script src="site_libs/anchor-sections-1.0.1/anchor-sections.js"></script>
-<script src="site_libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
-<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="site_libs/datatables-binding-0.16/datatables.js"></script>
-<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="site_libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="site_libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -421,63 +413,228 @@ div.tocify {
 <h1>Reading Data</h1>
 <p>All the values marked as ‘?’ have been read-in as NA’s using built-in feature of pandas read_csv method.</p>
 <pre class="python"><code>import pandas as pd
-dt = pd.read_csv(&#39;Blood_Pressure_data.csv&#39;, na_values=&#39;?&#39; )</code></pre>
+df_original = pd.read_csv(&#39;Blood_Pressure_data.csv&#39;, na_values=&#39;?&#39;,  )</code></pre>
 <pre><code>## sys:1: DtypeWarning: Columns (10) have mixed types.Specify dtype option on import or set low_memory=False.</code></pre>
-<p>A sample of random 100 rows from the dataset is displayed below:</p>
-<pre class="r"><code>DT::datatable(py$dt[sample(nrow(py$dt),100),])</code></pre>
-<div id="htmlwidget-0761a88e380ce57d5fdf" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0761a88e380ce57d5fdf">{"x":{"filter":"none","data":[["10066","90227","74383","24428","62837","99873","43208","36654","8200","56782","65508","62019","47226","21935","75756","34739","78841","69485","69685","25270","43232","29953","79208","5745","77207","19147","76661","83483","62274","10630","53823","17093","19907","98134","50056","73990","8737","72882","2308","20053","79626","75592","74047","55668","80305","49240","15542","44794","88756","46106","93405","63289","66106","62545","19467","13133","39200","54248","81395","17923","9228","18543","58182","23132","45354","48861","39719","59982","81382","2362","67929","99815","52634","10687","98545","26353","53423","55721","6921","76447","14451","57527","99119","100239","63351","11395","87584","72955","31604","22680","72042","91089","31684","15745","56852","49030","100438","14119","56581","15142"],[43029924,293357034,221433162,82734240,174867618,418524848,133340646,112783116,37517208,162755178,182705172,172838928,145258716,76034670,227749266,108386436,241312818,197652786,198531636,84615918,133405074,97372812,242855280,29433198,234044958,68519028,231605928,261615534,173615442,44844084,157418010,63301740,70566228,396778808,150759708,219747768,39074700,214283940,15133050,71024874,244558146,226993206,220007664,160679436,247398600,149267292,59551656,138252582,285841116,142334760,334947422,175990308,184611288,174191610,69327834,52596840,122043006,158178624,252173370,65398980,40554768,66990726,165125466,79147248,140125512,148531230,123493524,168389382,252139374,15516246,191164008,417898598,155457882,44979276,402077102,86955096,156765996,160792992,33558834,230787876,56327802,163990752,409616756,423199568,176178708,47131716,279914436,214576452,101348580,77937150,210018024,304846412,101558202,60038826,162867276,148943130,425599832,55362714,162361296,58370298],[23674671,89444250,59730075,2718189,56607129,101964051,47292786,23272101,553635,76416453,25291314,90607419,23208876,9395991,68085324,25501707,91569492,104420196,34234857,2205450,42915474,23434560,44286822,64038852,94163868,19854846,86055390,2148354,64970820,9897048,35275635,89709309,64349118,96387084,57948903,86754024,4655907,42579486,109319319,649800,56481453,96178698,97400385,89680383,44427933,62794638,6721533,43168419,42698646,64918593,104360490,23232357,40807377,85331970,25173126,498024,33725259,19115442,42629220,113076747,87572223,1854342,91976013,23117859,95106312,24776460,2268018,52681698,105241752,2422476,40896108,100378215,103398138,6040422,54274671,80803134,41618853,95836455,6253695,85330539,10350018,39745602,44271072,104148648,86130666,18528030,111611322,40565997,8212221,19989639,68634837,90426447,3508920,940617,39818493,43005618,4844826,90731916,27143640,8463780],["Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","AfricanAmerican","Caucasian","Caucasian","AfricanAmerican","Caucasian","AfricanAmerican","AfricanAmerican","Hispanic","Caucasian","Caucasian","Caucasian","Caucasian","AfricanAmerican","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","AfricanAmerican","Caucasian","AfricanAmerican","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","AfricanAmerican","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","AfricanAmerican","Caucasian","Caucasian","Caucasian","Caucasian","Hispanic","AfricanAmerican","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","AfricanAmerican","Caucasian","Caucasian","Caucasian","Hispanic","Caucasian","AfricanAmerican","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Other",null,"Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Hispanic","Caucasian","Caucasian","AfricanAmerican","Caucasian","Caucasian","AfricanAmerican","Caucasian","AfricanAmerican","Hispanic","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","Caucasian","AfricanAmerican","Caucasian"],["Male","Female","Female","Female","Female","Female","Male","Female","Male","Female","Male","Female","Female","Female","Male","Male","Male","Male","Female","Male","Male","Female","Female","Female","Male","Male","Female","Male","Male","Male","Female","Male","Female","Female","Female","Male","Male","Female","Female","Male","Female","Female","Male","Male","Female","Male","Male","Male","Male","Female","Female","Male","Female","Female","Male","Female","Male","Female","Female","Male","Female","Female","Female","Female","Male","Female","Male","Female","Male","Male","Male","Female","Female","Female","Female","Male","Female","Male","Male","Male","Male","Female","Female","Female","Male","Female","Female","Female","Female","Female","Female","Male","Female","Female","Female","Female","Male","Male","Female","Male"],["[70-80)","[70-80)","[70-80)","[70-80)","[50-60)","[70-80)","[80-90)","[50-60)","[50-60)","[70-80)","[70-80)","[50-60)","[20-30)","[30-40)","[30-40)","[50-60)","[80-90)","[60-70)","[70-80)","[50-60)","[60-70)","[80-90)","[70-80)","[50-60)","[50-60)","[50-60)","[40-50)","[90-100)","[70-80)","[50-60)","[80-90)","[70-80)","[40-50)","[50-60)","[70-80)","[70-80)","[60-70)","[80-90)","[70-80)","[80-90)","[60-70)","[80-90)","[50-60)","[40-50)","[70-80)","[60-70)","[70-80)","[70-80)","[60-70)","[60-70)","[70-80)","[80-90)","[70-80)","[70-80)","[40-50)","[40-50)","[60-70)","[70-80)","[70-80)","[70-80)","[70-80)","[40-50)","[80-90)","[60-70)","[80-90)","[80-90)","[50-60)","[80-90)","[40-50)","[70-80)","[60-70)","[60-70)","[70-80)","[30-40)","[70-80)","[80-90)","[50-60)","[80-90)","[60-70)","[60-70)","[60-70)","[50-60)","[60-70)","[40-50)","[90-100)","[30-40)","[60-70)","[80-90)","[80-90)","[50-60)","[70-80)","[80-90)","[80-90)","[70-80)","[40-50)","[60-70)","[90-100)","[70-80)","[30-40)","[70-80)"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"[75-100)",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"[75-100)",null,null,null,null,null,null,"[75-100)",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[1,2,1,1,2,1,1,3,3,1,2,1,3,3,3,1,3,1,3,1,3,5,3,3,1,1,1,3,1,3,1,1,1,2,3,1,3,1,6,1,1,1,3,1,6,1,1,1,1,2,1,3,1,3,5,1,1,1,2,3,2,1,1,6,3,1,2,3,2,2,3,2,3,1,1,3,3,1,2,1,1,2,3,2,1,1,6,1,1,1,3,1,2,1,3,3,6,1,1,1],[3,1,6,1,1,3,1,1,1,6,6,1,1,1,1,6,1,11,6,1,1,1,22,1,1,11,1,1,1,18,3,1,1,1,6,1,18,3,1,3,1,3,1,1,1,1,3,1,22,6,22,1,1,3,1,1,1,1,6,1,1,1,1,1,1,3,1,3,1,6,1,6,1,1,1,1,1,6,1,1,18,1,1,1,14,18,6,3,1,6,1,1,1,18,1,1,1,1,6,1],[17,7,7,7,1,7,7,1,1,7,1,7,1,1,1,7,1,7,1,7,1,17,7,1,7,7,7,1,7,1,7,7,7,7,1,7,1,7,7,7,7,7,1,7,17,7,7,7,7,1,7,1,7,1,17,7,7,7,7,1,4,7,7,17,1,5,4,1,7,1,1,1,1,7,7,1,1,7,1,7,7,7,1,1,7,7,17,7,6,7,1,7,1,7,7,1,7,7,2,7],[4,3,5,5,3,1,2,1,1,5,7,3,2,1,3,4,8,1,3,5,3,2,5,4,1,4,8,1,1,9,12,3,2,2,5,3,5,11,8,6,5,3,1,3,1,4,3,4,3,8,6,4,4,8,4,3,14,7,8,4,10,2,4,6,1,2,2,14,4,5,1,6,7,4,8,1,1,4,3,1,8,2,3,9,3,1,10,11,13,6,2,1,3,13,6,2,4,11,4,5],[null,"SP","CM",null,null,"MC",null,"MC",null,"MC","MC","HM","MD",null,"BC","UN","MC","HM","HM",null,"MC","MC","MC",null,"MC",null,"DM",null,null,null,null,null,null,"BC","MC","MC",null,"SP",null,null,"MC","MC",null,"HM",null,"BC",null,"MC","CP",null,"MC","MC","MC","HM",null,null,"MC","MC","MC",null,null,null,"MC",null,"UN","MC",null,"MC","OG",null,"MC","CP","SP",null,"MP","MC","SP",null,null,"MC",null,"MD","BC","MC",null,null,null,"MC","HM",null,"UN","MC","MC",null,"MC","CP",null,null,null,null],[null,"Emergency/Trauma",null,"InternalMedicine","Oncology","Emergency/Trauma","InternalMedicine","InternalMedicine","Cardiology","InternalMedicine","InternalMedicine",null,"ObstetricsandGynecology","ObstetricsandGynecology","Surgery-General",null,"Pulmonology",null,null,"Nephrology","Cardiology","Hematology/Oncology","Emergency/Trauma","InternalMedicine",null,"InternalMedicine",null,null,null,null,null,null,"Family/GeneralPractice","Emergency/Trauma",null,null,null,"Surgery-General",null,null,null,null,null,null,null,null,"InternalMedicine",null,null,"Family/GeneralPractice","Emergency/Trauma","InternalMedicine",null,"Radiologist","Psychiatry","InternalMedicine",null,"InternalMedicine","Emergency/Trauma",null,null,"InternalMedicine",null,"Family/GeneralPractice","Cardiology","InternalMedicine",null,"Psychiatry","Emergency/Trauma","InternalMedicine",null,"Surgery-General","Pulmonology","InternalMedicine",null,"Cardiology","Cardiology",null,"InternalMedicine","Emergency/Trauma",null,"Emergency/Trauma",null,"Pulmonology",null,null,"Pulmonology",null,"InternalMedicine","Family/GeneralPractice","Urology",null,"Surgery-Cardiovascular/Thoracic",null,"Emergency/Trauma",null,"InternalMedicine","InternalMedicine",null,"InternalMedicine"],[16,2,1,51,36,30,49,22,40,65,42,65,1,42,23,62,47,57,1,52,32,16,67,60,19,97,64,26,44,60,68,77,57,51,51,40,63,67,50,56,59,37,23,84,34,31,61,23,2,9,79,32,47,38,23,71,88,40,75,21,85,43,46,66,60,38,68,46,3,71,2,50,45,75,54,31,29,46,61,28,65,44,62,40,43,36,93,65,70,74,20,36,34,50,61,39,57,43,69,47],[1,0,3,2,0,0,0,1,5,0,0,6,0,0,2,3,3,0,1,3,6,0,6,1,3,6,4,2,0,6,3,0,0,0,1,1,1,1,0,0,0,1,1,1,6,0,0,0,0,0,0,0,0,3,0,0,3,1,1,1,6,1,0,3,5,0,2,0,0,5,0,3,0,0,0,2,6,3,0,0,0,3,0,0,0,0,1,3,1,1,1,0,2,0,0,0,2,1,0,2],[19,9,12,14,8,14,15,11,7,19,16,12,7,2,9,12,29,15,21,12,11,9,13,22,20,25,22,3,15,50,23,12,12,16,18,8,19,18,15,17,16,11,14,17,11,5,7,12,5,14,24,27,18,31,9,10,26,17,28,20,47,12,16,24,15,17,6,8,9,28,14,25,7,8,9,5,14,8,7,23,17,13,12,25,13,6,34,24,10,10,21,12,13,21,15,12,10,15,19,13],[2,0,0,0,3,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,2,0,0,0,0,2,0,4,0,0,0,0,0,1,0,0,0,0,0,1,5,0,0,0,1,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,3,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0],[0,0,0,0,0,2,0,1,0,0,0,3,1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,1,1,1,6,4,0,0,0,4,0,2,0,0,0,0,0,2,0,1,2,0,0,1,1,1,0,1,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,1,0,2,2,0,0,0,0,0,3,0,0,0,0,1,1,0,0,0,1,0,1,1,3,1,0,0,1,0,0,0,1,0,0,0,0,0,2,0,0,0,0,1,1,0,2,0,0,0,2,0,0,0,0,0,0,1],["820","780","444","535","787","414","491","250.02","414","250.4","428","414","644","648","574","250","491","507","722","996","414","435","434","250.8","414","571","560","427","560","414","428","780","558","786","250.7","284","403","8","402","507","250","824","722","530","414","998","345","428","433","131","410","428","496","715","296","785","584","428","162","185","414","786","428","493","414","486","572","295","250","414","331","682","3","250.23","296","427","414","433","682","403","491","786","584","493","507","786","427","427","250.8","434","593","725","440","480","295","398","285","38","250.11","38"],["427","425","401","250.01","276","510","428","276","250","403","496","411","642","250.02","571","291","414","707","250.6","38","425","414","342","403","411","456","998","427","401","V45","507","427","250.02","493","785","780","250","599","272","584","403","491","722","250.12","250","707","560","584","728","V10","435","424","203","427","300","250.6","276","511","197","250","411","780","276","997","411","289","571","290","276","285","721","427","276","276","272","337","414","276","250.81","585","428","790","250.4","519","276","250.01","276","428","577","42","250","584","250","428","250","396","428","707","V58","707"],["E888","198","250","515","787","425","515","242","272","599","403","250","648",null,"250","303","V45","276","357","403","428","250","781","780","412","578","285","780","250","401","427","162","276","300","560","401","583","276","250","403","585","518","721","250.6","272","41","250","585","276","250","446","518","595","285","301","357","403","427","197","272","584","250.03","427","584","401","780","284","301","272","411","250","443","787","305","250","250","414","401","707","276","789","493","583","272","276","412","428","599","807","276","401","403","401","427","244","496","427","287","616","707"],[8,9,5,9,8,9,9,9,5,9,5,8,5,2,4,7,6,7,3,9,7,9,9,9,9,9,9,9,9,6,9,5,9,9,6,9,6,9,5,8,9,9,9,9,6,9,7,9,9,5,9,4,6,9,5,5,9,7,9,3,9,4,7,9,9,7,9,6,3,6,8,9,6,3,7,3,8,6,5,9,9,8,9,9,9,6,9,9,5,9,4,9,4,9,4,9,6,9,7,9],["&gt;200","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","Norm","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","Norm","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","None","Norm","None","None","None"],["None","None","None","None","None","None","None","None","&gt;8","None","None","None","&gt;8","None","None","&gt;8","None","None","None","None","None","None","Norm","&gt;7","None","None","None","None","None","None","None","None","None","None","None","None","None","None","&gt;8","None","Norm","None","None","&gt;8","None","None","None","None","None","None","&gt;7","None","None","None","None","&gt;8","None","None","Norm","None","None","&gt;8","None","None","None","None","None","None","None","None","None","&gt;7","None","&gt;8","None","None","None","None","&gt;8","None","None","None","None","None","None","None","None","None","&gt;8","None","None","None","None","None","None","&gt;7","None","None","None","None"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","Steady","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","Steady","Steady","No","No","No","Steady","No","No","No","Steady","No","No","No","No","No","No","No","Steady","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","Steady","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Up","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","Down","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","Steady","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Down","No","No","Up","No","No","No","Steady","No","No","No","No","Down","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","Steady","Steady","No","No","No","No","No","Up","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","Steady","No","No","No","No","No","No","No","No"],["Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Up","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","Steady","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","Steady","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","Down","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Down","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","Steady","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","Steady","No","Steady","No","Down","Steady","Down","No","Steady","Steady","No","Down","Steady","Steady","Steady","Up","No","No","Up","Down","No","No","No","Steady","Steady","Up","No","Steady","No","No","No","Down","No","No","No","No","No","No","No","Up","Up","Steady","No","No","No","No","Down","Up","Steady","Up","Down","Steady","No","No","Down","No","Steady","Down","No","Down","Down","No","No","No","Up","Steady","Steady","Down","Steady","No","Steady","No","Steady","No","No","No","No","Steady","No","No","Steady","Down","Up","No","No","Up","Down","Steady","Steady","Down","No","No","Steady","No","Steady","No","No","Up","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"],["No","Ch","No","No","No","Ch","Ch","Ch","No","No","No","No","Ch","No","Ch","Ch","Ch","No","No","Ch","Ch","Ch","No","No","No","No","Ch","No","No","Ch","Ch","Ch","Ch","No","Ch","No","No","No","Ch","No","Ch","Ch","Ch","Ch","No","No","No","Ch","Ch","No","Ch","Ch","No","No","No","Ch","Ch","Ch","Ch","No","Ch","Ch","No","No","No","Ch","No","No","Ch","Ch","No","Ch","No","No","No","No","No","No","No","No","No","No","Ch","Ch","No","No","Ch","Ch","No","No","Ch","No","No","Ch","No","Ch","No","No","Ch","No"],["Yes","Yes","No","Yes","No","Yes","Yes","Yes","Yes","Yes","Yes","No","Yes","Yes","Yes","Yes","Yes","No","Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes","No","Yes","Yes","Yes","Yes","Yes","Yes","Yes","No","No","No","Yes","No","Yes","Yes","Yes","Yes","No","Yes","No","Yes","Yes","Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes","Yes","No","Yes","Yes","Yes","Yes","No","Yes","Yes","Yes","Yes","Yes","Yes","Yes","No","Yes","Yes","No","No","No","Yes","No","Yes","Yes","Yes","Yes","No","No","Yes","Yes","Yes","Yes","Yes","Yes","Yes","Yes","Yes","Yes","No","No","Yes","No"],["&gt;5","&gt;5","NO","NO","&lt;30","&lt;30","&gt;5","&gt;5","NO","NO","NO","&gt;5","&gt;5","NO","NO","&gt;5","&gt;5","NO","NO","&gt;5","&gt;5","NO","NO","&gt;5","&gt;5","NO","NO","NO","NO","NO","&gt;5","&gt;5","NO","NO","&lt;30","NO","NO","&gt;5","&lt;30","NO","&gt;5","&gt;5","NO","&lt;30","NO","&gt;5","NO","&gt;5","NO","&gt;5","&gt;5","&lt;30","&lt;30","NO","NO","NO","&gt;5","NO","&gt;5","NO","NO","NO","&lt;30","NO","&gt;5","NO","&lt;30","&lt;30","&lt;30","NO","NO","&gt;5","NO","NO","NO","&gt;5","&gt;5","&gt;5","NO","&gt;5","&lt;30","NO","&gt;5","&gt;5","NO","NO","NO","&gt;5","&gt;5","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>patient_no<\/th>\n      <th>cast<\/th>\n      <th>gender<\/th>\n      <th>age group<\/th>\n      <th>weight<\/th>\n      <th>admission_typeid<\/th>\n      <th>discharge_disposition_id<\/th>\n      <th>admission_source_id<\/th>\n      <th>time_in_hospital<\/th>\n      <th>payer_code<\/th>\n      <th>medical_specialty<\/th>\n      <th>num_lab_procedures<\/th>\n      <th>num_procedures<\/th>\n      <th>num_medications<\/th>\n      <th>number_outpatient<\/th>\n      <th>number_emergency<\/th>\n      <th>number_inpatient<\/th>\n      <th>diag_1<\/th>\n      <th>diag_2<\/th>\n      <th>diag_3<\/th>\n      <th>number_diagnoses<\/th>\n      <th>max_glu_serum<\/th>\n      <th>A1Cresult<\/th>\n      <th>metformin<\/th>\n      <th>repaglinide<\/th>\n      <th>nateglinide<\/th>\n      <th>chlorpropamide<\/th>\n      <th>glimepiride<\/th>\n      <th>acetohexamide<\/th>\n      <th>glipizide<\/th>\n      <th>glyburide<\/th>\n      <th>tolbutamide<\/th>\n      <th>pioglitazone<\/th>\n      <th>rosiglitazone<\/th>\n      <th>acarbose<\/th>\n      <th>miglitol<\/th>\n      <th>troglitazone<\/th>\n      <th>tolazamide<\/th>\n      <th>examide<\/th>\n      <th>citoglipton<\/th>\n      <th>insulin<\/th>\n      <th>glyburide-metformin<\/th>\n      <th>glipizide-metformin<\/th>\n      <th>glimepiride-pioglitazone<\/th>\n      <th>metformin-rosiglitazone<\/th>\n      <th>metformin-pioglitazone<\/th>\n      <th>change<\/th>\n      <th>Med<\/th>\n      <th>label<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,7,8,9,10,13,14,15,16,17,18,22]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<p>Shape of the data is given as:</p>
-<pre class="python"><code>dt.shape</code></pre>
-<pre><code>## (101766, 50)</code></pre>
-<p>Names of the columns are given below:</p>
-<pre class="r"><code>names(py$dt)</code></pre>
-<pre><code>##  [1] &quot;id&quot;                       &quot;patient_no&quot;              
-##  [3] &quot;cast&quot;                     &quot;gender&quot;                  
-##  [5] &quot;age group&quot;                &quot;weight&quot;                  
-##  [7] &quot;admission_typeid&quot;         &quot;discharge_disposition_id&quot;
-##  [9] &quot;admission_source_id&quot;      &quot;time_in_hospital&quot;        
-## [11] &quot;payer_code&quot;               &quot;medical_specialty&quot;       
-## [13] &quot;num_lab_procedures&quot;       &quot;num_procedures&quot;          
-## [15] &quot;num_medications&quot;          &quot;number_outpatient&quot;       
-## [17] &quot;number_emergency&quot;         &quot;number_inpatient&quot;        
-## [19] &quot;diag_1&quot;                   &quot;diag_2&quot;                  
-## [21] &quot;diag_3&quot;                   &quot;number_diagnoses&quot;        
-## [23] &quot;max_glu_serum&quot;            &quot;A1Cresult&quot;               
-## [25] &quot;metformin&quot;                &quot;repaglinide&quot;             
-## [27] &quot;nateglinide&quot;              &quot;chlorpropamide&quot;          
-## [29] &quot;glimepiride&quot;              &quot;acetohexamide&quot;           
-## [31] &quot;glipizide&quot;                &quot;glyburide&quot;               
-## [33] &quot;tolbutamide&quot;              &quot;pioglitazone&quot;            
-## [35] &quot;rosiglitazone&quot;            &quot;acarbose&quot;                
-## [37] &quot;miglitol&quot;                 &quot;troglitazone&quot;            
-## [39] &quot;tolazamide&quot;               &quot;examide&quot;                 
-## [41] &quot;citoglipton&quot;              &quot;insulin&quot;                 
-## [43] &quot;glyburide-metformin&quot;      &quot;glipizide-metformin&quot;     
-## [45] &quot;glimepiride-pioglitazone&quot; &quot;metformin-rosiglitazone&quot; 
-## [47] &quot;metformin-pioglitazone&quot;   &quot;change&quot;                  
-## [49] &quot;Med&quot;                      &quot;label&quot;</code></pre>
-<p>A first summary of the data is given as:</p>
-<pre class="python"><code>dt.describe().round(2)</code></pre>
-<pre><code>##                  id    patient_no  ...  number_inpatient  number_diagnoses
-## count  1.017660e+05  1.017660e+05  ...         101766.00         101766.00
-## mean   1.652016e+08  5.433040e+07  ...              0.64              7.42
-## std    1.026403e+08  3.869636e+07  ...              1.26              1.93
-## min    1.252200e+04  1.350000e+02  ...              0.00              1.00
-## 25%    8.496119e+07  2.341322e+07  ...              0.00              6.00
-## 50%    1.523890e+08  4.550514e+07  ...              0.00              8.00
-## 75%    2.302709e+08  8.754595e+07  ...              1.00              9.00
-## max    4.438672e+08  1.895026e+08  ...             21.00             16.00
-## 
-## [8 rows x 13 columns]</code></pre>
+<div id="type-conversions" class="section level2">
+<h2>Type Conversions</h2>
+<pre class="python"><code>df_original.dtypes</code></pre>
+<pre><code>## id                           int64
+## patient_no                   int64
+## cast                        object
+## gender                      object
+## age group                   object
+## weight                      object
+## admission_typeid             int64
+## discharge_disposition_id     int64
+## admission_source_id          int64
+## time_in_hospital             int64
+## payer_code                  object
+## medical_specialty           object
+## num_lab_procedures           int64
+## num_procedures               int64
+## num_medications              int64
+## number_outpatient            int64
+## number_emergency             int64
+## number_inpatient             int64
+## diag_1                      object
+## diag_2                      object
+## diag_3                      object
+## number_diagnoses             int64
+## max_glu_serum               object
+## A1Cresult                   object
+## metformin                   object
+## repaglinide                 object
+## nateglinide                 object
+## chlorpropamide              object
+## glimepiride                 object
+## acetohexamide               object
+## glipizide                   object
+## glyburide                   object
+## tolbutamide                 object
+## pioglitazone                object
+## rosiglitazone               object
+## acarbose                    object
+## miglitol                    object
+## troglitazone                object
+## tolazamide                  object
+## examide                     object
+## citoglipton                 object
+## insulin                     object
+## glyburide-metformin         object
+## glipizide-metformin         object
+## glimepiride-pioglitazone    object
+## metformin-rosiglitazone     object
+## metformin-pioglitazone      object
+## change                      object
+## Med                         object
+## label                       object
+## dtype: object</code></pre>
+<pre class="python"><code># df[[&quot;a&quot;, &quot;b&quot;]] = df[[&quot;a&quot;, &quot;b&quot;]].apply(pd.to_numeric, errors=&#39;coerce&#39;)     # coerce invalid values to NaN 
+# 
+# ser.astype(&#39;category&#39;)
+# 
+# df[&#39;zipcode&#39;] = df.zipcode.astype(&#39;category&#39;)</code></pre>
+</div>
+<div id="data-summaries" class="section level2">
+<h2>Data Summaries</h2>
+<pre class="python"><code># df[&#39;weight&#39;].describe().to_frame().T
+# df[&#39;weight&#39;].value_counts().sort_values(ascending=False)
+# df.isnull().sum(axis=0)</code></pre>
+<p>We first examine the percentage of missing values in each column as follows:</p>
+<pre class="python"><code>df=df_original
+percent_missing = round(df.isnull().sum() * 100 / len(df),2)
+missing_value_df = pd.DataFrame({&#39;Variable&#39;: df.columns,
+                                 &#39;MissingPercent&#39;: percent_missing})
+missing_value_df.sort_values(&#39;MissingPercent&#39;, inplace=True, ascending=False)
+missing_value_df[missing_value_df.MissingPercent&gt;0]</code></pre>
+<pre><code>##                             Variable  MissingPercent
+## weight                        weight           96.86
+## medical_specialty  medical_specialty           49.08
+## payer_code                payer_code           39.56
+## cast                            cast            2.23
+## diag_3                        diag_3            1.40
+## diag_2                        diag_2            0.35
+## diag_1                        diag_1            0.02</code></pre>
+<p>New consider the number of unique values in each variable, specially in categorical variables:</p>
+<pre class="python"><code>df.nunique()</code></pre>
+<pre><code>## id                          101766
+## patient_no                   71518
+## cast                             5
+## gender                           3
+## age group                       10
+## weight                           9
+## admission_typeid                 8
+## discharge_disposition_id        26
+## admission_source_id             17
+## time_in_hospital                14
+## payer_code                      17
+## medical_specialty               72
+## num_lab_procedures             118
+## num_procedures                   7
+## num_medications                 75
+## number_outpatient               39
+## number_emergency                33
+## number_inpatient                21
+## diag_1                         716
+## diag_2                         748
+## diag_3                         789
+## number_diagnoses                16
+## max_glu_serum                    4
+## A1Cresult                        4
+## metformin                        4
+## repaglinide                      4
+## nateglinide                      4
+## chlorpropamide                   4
+## glimepiride                      4
+## acetohexamide                    2
+## glipizide                        4
+## glyburide                        4
+## tolbutamide                      2
+## pioglitazone                     4
+## rosiglitazone                    4
+## acarbose                         4
+## miglitol                         4
+## troglitazone                     2
+## tolazamide                       3
+## examide                          1
+## citoglipton                      1
+## insulin                          4
+## glyburide-metformin              4
+## glipizide-metformin              2
+## glimepiride-pioglitazone         2
+## metformin-rosiglitazone          2
+## metformin-pioglitazone           2
+## change                           2
+## Med                              2
+## label                            3
+## dtype: int64</code></pre>
+</div>
 <div id="data-cleaning" class="section level2">
 <h2>Data Cleaning</h2>
-<p>for conversion of column types use<br />
-&gt;&gt;&gt; df[‘zipcode’] = df.zipcode.astype(‘category’)<br />
-&gt;&gt;&gt; import dtale &gt;&gt;&gt; import pandas as pd &gt;&gt;&gt; dtale.show(pd.read_csv(“titanic.csv”))</p>
-<p>How many nulls in each column:</p>
-<pre class="python"><code>dt[&#39;weight&#39;].isnull().sum()</code></pre>
-<pre><code>## 98569</code></pre>
+<p>Combining the information present in Missing Values and Number of distinct values we determine certain cleaning tasks and also apply a transformation on label variable. Details of these cleaning steps are as follows:</p>
+<ul>
+<li><p>Replace all “?” with NA (Not Available).</p></li>
+<li><p>Factors ‘&gt;5’ and ‘&lt;30’ have been lumped together in new category named ‘YES’.</p></li>
+</ul>
+<pre class="python"><code># dt = pd.DataFrame({&#39;a&#39;:[1,3,3,1], &#39;b&#39;:[2,2,4,5]})
+label_dict = {&#39;&gt;5&#39;:&#39;YES&#39;, &#39;&lt;30&#39;:&#39;YES&#39;,&#39;NO&#39;:&#39;NO&#39;}
+df = df.replace(dict(label=label_dict))
+df.head(20)</code></pre>
+<pre><code>##          id  patient_no             cast  ... change  Med label
+## 0   2278392     8222157        Caucasian  ...     No   No    NO
+## 1    149190    55629189        Caucasian  ...     Ch  Yes   YES
+## 2     64410    86047875  AfricanAmerican  ...     No  Yes    NO
+## 3    500364    82442376        Caucasian  ...     Ch  Yes    NO
+## 4     16680    42519267        Caucasian  ...     Ch  Yes    NO
+## 5     35754    82637451        Caucasian  ...     No  Yes   YES
+## 6     55842    84259809        Caucasian  ...     Ch  Yes    NO
+## 7     63768   114882984        Caucasian  ...     No  Yes   YES
+## 8     12522    48330783        Caucasian  ...     Ch  Yes    NO
+## 9     15738    63555939        Caucasian  ...     Ch  Yes    NO
+## 10    28236    89869032  AfricanAmerican  ...     No  Yes   YES
+## 11    36900    77391171  AfricanAmerican  ...     Ch  Yes   YES
+## 12    40926    85504905        Caucasian  ...     Ch  Yes   YES
+## 13    42570    77586282        Caucasian  ...     No  Yes    NO
+## 14    62256    49726791  AfricanAmerican  ...     No  Yes   YES
+## 15    73578    86328819  AfricanAmerican  ...     Ch  Yes    NO
+## 16    77076    92519352  AfricanAmerican  ...     Ch  Yes   YES
+## 17    84222   108662661        Caucasian  ...     No  Yes    NO
+## 18    89682   107389323  AfricanAmerican  ...     No  Yes   YES
+## 19   148530    69422211              NaN  ...     Ch  Yes    NO
+## 
+## [20 rows x 50 columns]</code></pre>
+<p><strong>Variables to be Deleted:</strong></p>
+<ul>
+<li><p><em>id, weight, discharge_disposition_id, admission_source_id, patient_no and admission_typeid</em> are useless because of having more than 10 factors</p></li>
+<li><p><em>payer_code and medical_specialty</em> have very high number of factors 17 and 72, respectively. Moreover they contain integer and alphanumeric factors simultaneously.</p></li>
+<li><p><em>examide</em> and <em>citoglipton</em> have only 1 factor throughout i.e. have 0 variance</p></li>
+<li><p><em>repaglinide, nateglinide, chlorpropamide, acetohexamide, tolbutamide, acarbose, miglitol, troglitazone, tolazamide, glyburide, glipizide, glimepiride-pioglitazone, metformin, metformin-pioglitazone, metformin-rosiglitazone, glipizide-metformin</em> have abnormal factor counts, which may also be visualized through graphs on the Visualization page of this website.</p></li>
+</ul>
+<pre class="python"><code>cols_to_delete = [&#39;id&#39;, &#39;weight&#39;, &#39;discharge_disposition_id&#39;, &#39;admission_source_id&#39;, &#39;patient_no&#39;, &#39;admission_typeid&#39;,&#39;payer_code&#39;, &#39;medical_specialty&#39;, &#39;examide&#39;, &#39;citoglipton&#39;, &#39;repaglinide&#39;, &#39;nateglinide&#39;, &#39;chlorpropamide&#39;, &#39;acetohexamide&#39;, &#39;tolbutamide&#39;, &#39;acarbose&#39;, &#39;miglitol&#39;, &#39;troglitazone&#39;, &#39;tolazamide&#39;, &#39;glyburide&#39;, &#39;glipizide&#39;, &#39;glimepiride-pioglitazone&#39;, &#39;metformin&#39;, &#39;metformin-pioglitazone&#39;, &#39;metformin-rosiglitazone&#39;, &#39;glipizide-metformin&#39;]
+
+df = df_original.drop(cols_to_delete, axis=1, inplace=False)
+
+df.columns</code></pre>
+<pre><code>## Index([&#39;cast&#39;, &#39;gender&#39;, &#39;age group&#39;, &#39;time_in_hospital&#39;, &#39;num_lab_procedures&#39;,
+##        &#39;num_procedures&#39;, &#39;num_medications&#39;, &#39;number_outpatient&#39;,
+##        &#39;number_emergency&#39;, &#39;number_inpatient&#39;, &#39;diag_1&#39;, &#39;diag_2&#39;, &#39;diag_3&#39;,
+##        &#39;number_diagnoses&#39;, &#39;max_glu_serum&#39;, &#39;A1Cresult&#39;, &#39;glimepiride&#39;,
+##        &#39;pioglitazone&#39;, &#39;rosiglitazone&#39;, &#39;insulin&#39;, &#39;glyburide-metformin&#39;,
+##        &#39;change&#39;, &#39;Med&#39;, &#39;label&#39;],
+##       dtype=&#39;object&#39;)</code></pre>
+<pre class="python"><code>print(df.info())</code></pre>
+<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## RangeIndex: 101766 entries, 0 to 101765
+## Data columns (total 24 columns):
+##  #   Column               Non-Null Count   Dtype 
+## ---  ------               --------------   ----- 
+##  0   cast                 99493 non-null   object
+##  1   gender               101766 non-null  object
+##  2   age group            101766 non-null  object
+##  3   time_in_hospital     101766 non-null  int64 
+##  4   num_lab_procedures   101766 non-null  int64 
+##  5   num_procedures       101766 non-null  int64 
+##  6   num_medications      101766 non-null  int64 
+##  7   number_outpatient    101766 non-null  int64 
+##  8   number_emergency     101766 non-null  int64 
+##  9   number_inpatient     101766 non-null  int64 
+##  10  diag_1               101745 non-null  object
+##  11  diag_2               101408 non-null  object
+##  12  diag_3               100343 non-null  object
+##  13  number_diagnoses     101766 non-null  int64 
+##  14  max_glu_serum        101766 non-null  object
+##  15  A1Cresult            101766 non-null  object
+##  16  glimepiride          101766 non-null  object
+##  17  pioglitazone         101766 non-null  object
+##  18  rosiglitazone        101766 non-null  object
+##  19  insulin              101766 non-null  object
+##  20  glyburide-metformin  101766 non-null  object
+##  21  change               101766 non-null  object
+##  22  Med                  101766 non-null  object
+##  23  label                101766 non-null  object
+## dtypes: int64(8), object(16)
+## memory usage: 18.6+ MB
+## None</code></pre>
 </div>
 </div>
 

@@ -12,42 +12,84 @@ library(reticulate)
 All the values marked as '?' have been read-in as NA's using built-in feature of pandas read_csv method.  
 ```{python}
 import pandas as pd
-dt = pd.read_csv('Blood_Pressure_data.csv', na_values='?' )
+df_original = pd.read_csv('Blood_Pressure_data.csv', na_values='?',  )
 ```
-A sample of random 100 rows from the dataset is displayed below:
-```{r}
-DT::datatable(py$dt[sample(nrow(py$dt),100),])
-```
-
-
-Shape of the data is given as:
+## Type Conversions  
 
 ```{python}
-dt.shape
+df_original.dtypes
 ```
-
-Names of the columns are given below:
-```{r}
-names(py$dt)
-```
-A first summary of the data is given as:
 ```{python}
-dt.describe().round(2)
+# df[["a", "b"]] = df[["a", "b"]].apply(pd.to_numeric, errors='coerce')     # coerce invalid values to NaN 
+# 
+# ser.astype('category')
+# 
+# df['zipcode'] = df.zipcode.astype('category')
 ```
 
+## Data Summaries  
 
+```{python}
+# df['weight'].describe().to_frame().T
+# df['weight'].value_counts().sort_values(ascending=False)
+# df.isnull().sum(axis=0)
 
+```
 
+We first examine the percentage of missing values in each column as follows: 
+```{python}
+df=df_original
+percent_missing = round(df.isnull().sum() * 100 / len(df),2)
+missing_value_df = pd.DataFrame({'Variable': df.columns,
+                                 'MissingPercent': percent_missing})
+missing_value_df.sort_values('MissingPercent', inplace=True, ascending=False)
+missing_value_df[missing_value_df.MissingPercent>0]
+```
+New consider the number of unique values in each variable, specially in categorical variables:  
+```{python}
+df.nunique()
+```
 ## Data Cleaning  
-for conversion of column types use  
->>> df['zipcode'] = df.zipcode.astype('category')  
->>> import dtale
->>> import pandas as pd
->>> dtale.show(pd.read_csv("titanic.csv"))
 
-How many nulls in each column:
+Combining the information present in Missing Values and Number of distinct values we determine certain cleaning tasks and also apply a transformation on label variable. Details of these cleaning steps are as follows:  
+
+- Replace all "?" with NA (Not Available).  
+
+- Factors '>5' and '<30' have been lumped together in new category named 'YES'.  
+  
 ```{python}
-dt['weight'].isnull().sum()
+# dt = pd.DataFrame({'a':[1,3,3,1], 'b':[2,2,4,5]})
+label_dict = {'>5':'YES', '<30':'YES','NO':'NO'}
+df = df.replace(dict(label=label_dict))
+df.head(20)
 ```
+**Variables to be Deleted:**  
+
+- *id, weight, discharge_disposition_id, admission_source_id, patient_no and admission_typeid* are useless because of having more than 10 factors   
+
+- *payer_code and medical_specialty* have very high number of factors 17 and 72, respectively.  Moreover they contain integer and alphanumeric factors simultaneously.  
+
+- *examide* and *citoglipton* have only 1 factor throughout i.e. have 0 variance  
+
+- *repaglinide, nateglinide, chlorpropamide, acetohexamide, tolbutamide, acarbose, miglitol, troglitazone, tolazamide, glyburide, glipizide, glimepiride-pioglitazone, metformin, metformin-pioglitazone, metformin-rosiglitazone, glipizide-metformin* have abnormal factor counts, which may also be visualized through graphs on the Visualization page of this website. 
+
+
+```{python}
+cols_to_delete = ['id', 'weight', 'discharge_disposition_id', 'admission_source_id', 'patient_no', 'admission_typeid','payer_code', 'medical_specialty', 'examide', 'citoglipton', 'repaglinide', 'nateglinide', 'chlorpropamide', 'acetohexamide', 'tolbutamide', 'acarbose', 'miglitol', 'troglitazone', 'tolazamide', 'glyburide', 'glipizide', 'glimepiride-pioglitazone', 'metformin', 'metformin-pioglitazone', 'metformin-rosiglitazone', 'glipizide-metformin']
+
+df = df_original.drop(cols_to_delete, axis=1, inplace=False)
+
+df.columns
+
+```
+
+```{python}
+print(df.info())
+```
+
+
+
+
+
 
 

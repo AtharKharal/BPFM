@@ -19,22 +19,15 @@ df_original = pd.read_csv('Blood_Pressure_data.csv', na_values='?',  )
 ```{python}
 df_original.dtypes
 ```
-```{python}
-# df[["a", "b"]] = df[["a", "b"]].apply(pd.to_numeric, errors='coerce')     # coerce invalid values to NaN 
-# 
-# ser.astype('category')
-# 
-# df['zipcode'] = df.zipcode.astype('category')
+```{python, evaluate=FALSE}
+to_convert = ['cast','gender','age group','diag_1','diag_2','diag_3','max_glu_serum','A1Cresult', 'glimepiride',
+       'pioglitazone', 'rosiglitazone', 'insulin', 'glyburide-metformin',
+       'change', 'Med', 'label']
+# df[to_convert] = df_original[to_convert].astype('category')
+# df.dtypes
 ```
 
 ## Data Summaries  
-
-```{python}
-# df['weight'].describe().to_frame().T
-# df['weight'].value_counts().sort_values(ascending=False)
-# df.isnull().sum(axis=0)
-
-```
 
 We first examine the percentage of missing values in each column as follows: 
 ```{python}
@@ -75,7 +68,7 @@ df.head(20)
 
 
 ```{python}
-cols_to_delete = ['id', 'weight', 'discharge_disposition_id', 'admission_source_id', 'patient_no', 'admission_typeid','payer_code', 'medical_specialty', 'examide', 'citoglipton', 'repaglinide', 'nateglinide', 'chlorpropamide', 'acetohexamide', 'tolbutamide', 'acarbose', 'miglitol', 'troglitazone', 'tolazamide', 'glyburide', 'glipizide', 'glimepiride-pioglitazone', 'metformin', 'metformin-pioglitazone', 'metformin-rosiglitazone', 'glipizide-metformin']
+cols_to_delete = ['id', 'weight', 'discharge_disposition_id', 'admission_source_id', 'patient_no', 'admission_typeid','payer_code', 'medical_specialty', 'examide', 'citoglipton', 'repaglinide', 'nateglinide', 'chlorpropamide', 'acetohexamide', 'tolbutamide', 'acarbose', 'miglitol', 'troglitazone', 'tolazamide', 'glyburide', 'glipizide', 'glimepiride-pioglitazone', 'metformin', 'metformin-pioglitazone', 'metformin-rosiglitazone', 'glipizide-metformin','diag_1', 'diag_2', 'diag_3']
 
 df = df_original.drop(cols_to_delete, axis=1, inplace=False)
 
@@ -88,6 +81,17 @@ print(df.info())
 ```
 
 
+# Auto Profile of Data  
+
+```{python}
+# from pandas_profiling import ProfileReport
+# 
+# #EDA using pandas-profiling
+# profile = ProfileReport(df, explorative=True)
+
+#Saving results to a HTML file
+# profile.to_file("BP_data_profile.html")
+```
 
 
 

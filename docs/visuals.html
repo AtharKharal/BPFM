@@ -374,7 +374,7 @@ div.tocify {
   <a href="cleaning.html">Data Cleaning</a>
 </li>
 <li>
-  <a href="eda.html">Exploratory Data Analysis</a>
+  <a href="visuals.html">Visualizations</a>
 </li>
 <li>
   <a href="model.html">Model Building</a>
@@ -410,7 +410,21 @@ div.tocify {
 </div>
 
 
+<pre class="python"><code># import seaborn as sns
+# import matplotlib.pyplot as plt
+# 
+# Comment this if the data visualisations doesn&#39;t work on your side
+# %matplotlib inline
+# 
+# plt.style.use(&#39;bmh&#39;)
 
+# matplotlib.pyplot.bar(x, height, width=0.8, bottom=None, *, align=&#39;center&#39;, data=None, **kwargs)</code></pre>
+<pre class="python"><code>
+# print(df[&#39;SalePrice&#39;].describe())
+# plt.figure(figsize=(9, 8))
+# sns.distplot(df[&#39;SalePrice&#39;], color=&#39;g&#39;, bins=100, hist_kws={&#39;alpha&#39;: 0.4});</code></pre>
+<pre class="python"><code># df_num = df.select_dtypes(include = [&#39;float64&#39;, &#39;int64&#39;])
+# df_num.hist(figsize=(16, 20), bins=50, xlabelsize=8, ylabelsize=8);</code></pre>
 
 
 

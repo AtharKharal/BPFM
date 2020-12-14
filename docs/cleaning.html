@@ -374,7 +374,7 @@ div.tocify {
   <a href="cleaning.html">Data Cleaning</a>
 </li>
 <li>
-  <a href="eda.html">Exploratory Data Analysis</a>
+  <a href="visuals.html">Visualizations</a>
 </li>
 <li>
   <a href="model.html">Model Building</a>
@@ -555,6 +555,7 @@ df[&#39;glyburide-metformin&#39;] = df[&#39;glyburide-metformin&#39;].astype(&#3
 df[&#39;change&#39;] = df[&#39;change&#39;].astype(&#39;category&#39;)
 df[&#39;Med&#39;] = df[&#39;Med&#39;].astype(&#39;category&#39;)
 df[&#39;label&#39;] = df[&#39;label&#39;].astype(&#39;category&#39;)
+# df.to_csv(&#39;data_pandas_cleaned.csv&#39;)
 print(df.info())</code></pre>
 <pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
 ## RangeIndex: 101766 entries, 0 to 101765
@@ -586,16 +587,6 @@ print(df.info())</code></pre>
 ## memory usage: 7.5 MB
 ## None</code></pre>
 </div>
-</div>
-<div id="auto-profile-of-data" class="section level1">
-<h1>Auto Profile of Data</h1>
-<pre class="python"><code># from pandas_profiling import ProfileReport
-# 
-# #EDA using pandas-profiling
-# profile = ProfileReport(df, explorative=True)
-
-#Saving results to a HTML file
-# profile.to_file(&quot;BP_data_profile.html&quot;)</code></pre>
 </div>
 
 

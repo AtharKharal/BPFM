@@ -374,7 +374,7 @@ div.tocify {
   <a href="cleaning.html">Data Cleaning</a>
 </li>
 <li>
-  <a href="eda.html">Exploratory Data Analysis</a>
+  <a href="visuals.html">Visualizations</a>
 </li>
 <li>
   <a href="model.html">Model Building</a>
@@ -410,12 +410,60 @@ div.tocify {
 </div>
 
 
+<pre class="python"><code>import pandas as pd
+df = pd.read_csv(&#39;data_pandas_cleaned.csv&#39;)
+
+df[&#39;cast&#39;] = df[&#39;cast&#39;].astype(&#39;category&#39;)
+df[&#39;gender&#39;] = df[&#39;gender&#39;].astype(&#39;category&#39;)
+df[&#39;age group&#39;] = df[&#39;age group&#39;].astype(&#39;category&#39;)
+df[&#39;max_glu_serum&#39;] = df[&#39;max_glu_serum&#39;].astype(&#39;category&#39;)
+df[&#39;A1Cresult&#39;] = df[&#39;A1Cresult&#39;].astype(&#39;category&#39;)
+df[&#39;glimepiride&#39;] = df[&#39;glimepiride&#39;].astype(&#39;category&#39;)
+df[&#39;pioglitazone&#39;] = df[&#39;pioglitazone&#39;].astype(&#39;category&#39;)
+df[&#39;rosiglitazone&#39;] = df[&#39;rosiglitazone&#39;].astype(&#39;category&#39;)
+df[&#39;insulin&#39;] = df[&#39;insulin&#39;].astype(&#39;category&#39;)
+df[&#39;glyburide-metformin&#39;] = df[&#39;glyburide-metformin&#39;].astype(&#39;category&#39;)
+df[&#39;change&#39;] = df[&#39;change&#39;].astype(&#39;category&#39;)
+df[&#39;Med&#39;] = df[&#39;Med&#39;].astype(&#39;category&#39;)
+df[&#39;label&#39;] = df[&#39;label&#39;].astype(&#39;category&#39;)
+
+print(df.info())</code></pre>
+<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## RangeIndex: 101766 entries, 0 to 101765
+## Data columns (total 22 columns):
+##  #   Column               Non-Null Count   Dtype   
+## ---  ------               --------------   -----   
+##  0   Unnamed: 0           101766 non-null  int64   
+##  1   cast                 99493 non-null   category
+##  2   gender               101766 non-null  category
+##  3   age group            101766 non-null  category
+##  4   time_in_hospital     101766 non-null  int64   
+##  5   num_lab_procedures   101766 non-null  int64   
+##  6   num_procedures       101766 non-null  int64   
+##  7   num_medications      101766 non-null  int64   
+##  8   number_outpatient    101766 non-null  int64   
+##  9   number_emergency     101766 non-null  int64   
+##  10  number_inpatient     101766 non-null  int64   
+##  11  number_diagnoses     101766 non-null  int64   
+##  12  max_glu_serum        101766 non-null  category
+##  13  A1Cresult            101766 non-null  category
+##  14  glimepiride          101766 non-null  category
+##  15  pioglitazone         101766 non-null  category
+##  16  rosiglitazone        101766 non-null  category
+##  17  insulin              101766 non-null  category
+##  18  glyburide-metformin  101766 non-null  category
+##  19  change               101766 non-null  category
+##  20  Med                  101766 non-null  category
+##  21  label                101766 non-null  category
+## dtypes: category(13), int64(9)
+## memory usage: 8.3 MB
+## None</code></pre>
 <div id="random-forest" class="section level1">
 <h1>Random Forest</h1>
 <pre class="python"><code># from sklearn.datasets import load_iris
 # from sklearn.model_selection import train_test_split
 # from skranger.ensemble import RangerForestClassifier
-# 
+
 # X, y = load_iris(return_X_y=True)
 # X_train, X_test, y_train, y_test = train_test_split(X, y)
 # 

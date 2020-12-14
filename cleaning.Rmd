@@ -82,22 +82,6 @@ df['glyburide-metformin'] = df['glyburide-metformin'].astype('category')
 df['change'] = df['change'].astype('category')
 df['Med'] = df['Med'].astype('category')
 df['label'] = df['label'].astype('category')
+# df.to_csv('data_pandas_cleaned.csv')
 print(df.info())
 ```
-
-# Auto Profile of Data  
-
-```{python}
-# from pandas_profiling import ProfileReport
-# 
-# #EDA using pandas-profiling
-# profile = ProfileReport(df, explorative=True)
-
-#Saving results to a HTML file
-# profile.to_file("BP_data_profile.html")
-```
-
-
-
-
-

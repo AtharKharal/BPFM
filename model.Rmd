@@ -8,13 +8,35 @@ knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)
 ```
 
+```{python}
+import pandas as pd
+df = pd.read_csv('data_pandas_cleaned.csv')
+
+df['cast'] = df['cast'].astype('category')
+df['gender'] = df['gender'].astype('category')
+df['age group'] = df['age group'].astype('category')
+df['max_glu_serum'] = df['max_glu_serum'].astype('category')
+df['A1Cresult'] = df['A1Cresult'].astype('category')
+df['glimepiride'] = df['glimepiride'].astype('category')
+df['pioglitazone'] = df['pioglitazone'].astype('category')
+df['rosiglitazone'] = df['rosiglitazone'].astype('category')
+df['insulin'] = df['insulin'].astype('category')
+df['glyburide-metformin'] = df['glyburide-metformin'].astype('category')
+df['change'] = df['change'].astype('category')
+df['Med'] = df['Med'].astype('category')
+df['label'] = df['label'].astype('category')
+
+print(df.info())
+```
+
+
 # Random Forest 
 
 ```{python}
-# from sklearn.datasets import load_iris
-# from sklearn.model_selection import train_test_split
-# from skranger.ensemble import RangerForestClassifier
-# 
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from skranger.ensemble import RangerForestClassifier
+
 # X, y = load_iris(return_X_y=True)
 # X_train, X_test, y_train, y_test = train_test_split(X, y)
 # 

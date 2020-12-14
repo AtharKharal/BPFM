@@ -8,8 +8,8 @@ navbar:
       href: statement.html
     - text: "Data Cleaning"
       href: cleaning.html
-    - text: "Exploratory Data Analysis"
-      href: eda.html
+    - text: "Visualizations"
+      href: visuals.html
     - text: "Model Building"
       href: model.html
     - text: "R Solution"

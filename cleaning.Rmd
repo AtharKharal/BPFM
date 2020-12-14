@@ -8,43 +8,33 @@ knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)
 ```
 
-# Reading Data  
+# Reading Data
+
 All the values marked as '?' have been read-in as NA's using built-in feature of pandas read_csv method.  
 ```{python}
 import pandas as pd
 df_original = pd.read_csv('Blood_Pressure_data.csv', na_values='?',  )
-```
-## Type Conversions  
-
-```{python}
-df_original.dtypes
-```
-```{python, evaluate=FALSE}
-to_convert = ['cast','gender','age group','diag_1','diag_2','diag_3','max_glu_serum','A1Cresult', 'glimepiride',
-       'pioglitazone', 'rosiglitazone', 'insulin', 'glyburide-metformin',
-       'change', 'Med', 'label']
-# df[to_convert] = df_original[to_convert].astype('category')
-# df.dtypes
 ```
 
 ## Data Summaries  
 
 We first examine the percentage of missing values in each column as follows: 
 ```{python}
-df=df_original
+df = df_original
 percent_missing = round(df.isnull().sum() * 100 / len(df),2)
 missing_value_df = pd.DataFrame({'Variable': df.columns,
                                  'MissingPercent': percent_missing})
 missing_value_df.sort_values('MissingPercent', inplace=True, ascending=False)
 missing_value_df[missing_value_df.MissingPercent>0]
 ```
-New consider the number of unique values in each variable, specially in categorical variables:  
+Now consider the number of unique values in each variable, specially in categorical variables:  
 ```{python}
 df.nunique()
 ```
+
 ## Data Cleaning  
 
-Combining the information present in Missing Values and Number of distinct values we determine certain cleaning tasks and also apply a transformation on label variable. Details of these cleaning steps are as follows:  
+Combining the information present in Missing Values, Number of distinct values and Variable Types we perform certain cleaning tasks and also apply a transformation on label variable. Details of these cleaning steps are as follows:  
 
 - Replace all "?" with NA (Not Available).  
 
@@ -76,10 +66,24 @@ df.columns
 
 ```
 
+- Variables to be converted into categorical ones: *cast,gender,age group,max_glu_serum,A1Cresult, glimepiride, pioglitazone, rosiglitazone, insulin, glyburide-metformin, change, Med, label*  
+
 ```{python}
+df['cast'] = df['cast'].astype('category')
+df['gender'] = df['gender'].astype('category')
+df['age group'] = df['age group'].astype('category')
+df['max_glu_serum'] = df['max_glu_serum'].astype('category')
+df['A1Cresult'] = df['A1Cresult'].astype('category')
+df['glimepiride'] = df['glimepiride'].astype('category')
+df['pioglitazone'] = df['pioglitazone'].astype('category')
+df['rosiglitazone'] = df['rosiglitazone'].astype('category')
+df['insulin'] = df['insulin'].astype('category')
+df['glyburide-metformin'] = df['glyburide-metformin'].astype('category')
+df['change'] = df['change'].astype('category')
+df['Med'] = df['Med'].astype('category')
+df['label'] = df['label'].astype('category')
 print(df.info())
 ```
-
 
 # Auto Profile of Data  
 

@@ -8,11 +8,15 @@ knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)
 ```
 
+
+
 ```{python}
 import pandas as pd
 df = pd.read_csv('data_pandas_cleaned.csv')
 
 df['cast'] = df['cast'].astype('category')
+df["cast"].fillna('Caucasian', inplace=True)   # 'mode' imputation has been applied as Caucasian is the most frequent category in cast
+
 df['gender'] = df['gender'].astype('category')
 df['age group'] = df['age group'].astype('category')
 df['max_glu_serum'] = df['max_glu_serum'].astype('category')
@@ -24,30 +28,96 @@ df['insulin'] = df['insulin'].astype('category')
 df['glyburide-metformin'] = df['glyburide-metformin'].astype('category')
 df['change'] = df['change'].astype('category')
 df['Med'] = df['Med'].astype('category')
+
+label_dict = {'>5':'YES', '<30':'YES','NO':'NO'}
+df = df.replace(dict(label=label_dict))
 df['label'] = df['label'].astype('category')
+
+df = df.iloc[:,1:]
 
 print(df.info())
 ```
+```{python}
+X = df.iloc[:,0:-1]
+y = df.iloc[:,-1]
+X.head()
+y.head()
+```
 
-
-# Random Forest 
+# Encoding  
 
 ```{python}
-# from sklearn.datasets import load_iris
-# from sklearn.model_selection import train_test_split
-# from skranger.ensemble import RangerForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 
-# X, y = load_iris(return_X_y=True)
-# X_train, X_test, y_train, y_test = train_test_split(X, y)
-# 
-# rfc = RangerForestClassifier()
-# rfc.fit(X_train, y_train)
-# 
-# predictions = rfc.predict(X_test)
-# print(predictions)
-# # [1 2 0 0 0 0 1 2 1 1 2 2 2 1 1 0 1 1 0 1 1 1 0 2 1 0 0 1 2 2 0 1 2 2 0 2 0 0]
-# 
-# probabilities = rfc.predict_proba(X_test)
-# print(probabilities)
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+transformer = ColumnTransformer(transformers=[('cat', OneHotEncoder(), [0, 1,2,11,12,13,14,15,16,17,18,19])], remainder='passthrough')
+
+```
+
+
+## Naive Baye  
+
+```{python}
+from sklearn.naive_bayes import GaussianNB
+```
+
+
+
+## Random Forest  
+```{python}
+model_RF = RandomForestClassifier()
+pipeline_RF = Pipeline(steps=[('t', transformer), ('m',model_RF)])
+pipeline_RF.fit(X_train, y_train)
+yhat_RF = pipeline_RF.predict(X_test)
+```
+
+## Decision Tree  
+
+```{python}
+from  sklearn.tree import DecisionTreeClassifier
+
+
+```
+
+
+# Majority Voting Ensemble  
+
+```{python}
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+clf1 = LogisticRegression(multi_class='multinomial', random_state=1)
+clf2 = RandomForestClassifier(n_estimators=50, random_state=1)
+clf3 = GaussianNB()
+X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
+y = np.array([1, 1, 1, 2, 2, 2])
+eclf1 = VotingClassifier(estimators=[
+        ('lr', clf1), ('rf', clf2), ('gnb', clf3)], voting='hard')
+eclf1 = eclf1.fit(X, y)
+print(eclf1.predict(X))
+
+np.array_equal(eclf1.named_estimators_.lr.predict(X),
+               eclf1.named_estimators_['lr'].predict(X))
+
+eclf2 = VotingClassifier(estimators=[
+        ('lr', clf1), ('rf', clf2), ('gnb', clf3)],
+        voting='soft')
+eclf2 = eclf2.fit(X, y)
+print(eclf2.predict(X))
+
+eclf3 = VotingClassifier(estimators=[
+       ('lr', clf1), ('rf', clf2), ('gnb', clf3)],
+       voting='soft', weights=[2,1,1],
+       flatten_transform=True)
+eclf3 = eclf3.fit(X, y)
+print(eclf3.predict(X))
+
+print(eclf3.transform(X).shape)
 ```
 

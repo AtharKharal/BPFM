@@ -414,6 +414,8 @@ div.tocify {
 df = pd.read_csv(&#39;data_pandas_cleaned.csv&#39;)
 
 df[&#39;cast&#39;] = df[&#39;cast&#39;].astype(&#39;category&#39;)
+df[&quot;cast&quot;].fillna(&#39;Caucasian&#39;, inplace=True)   # &#39;mode&#39; imputation has been applied as Caucasian is the most frequent category in cast
+
 df[&#39;gender&#39;] = df[&#39;gender&#39;].astype(&#39;category&#39;)
 df[&#39;age group&#39;] = df[&#39;age group&#39;].astype(&#39;category&#39;)
 df[&#39;max_glu_serum&#39;] = df[&#39;max_glu_serum&#39;].astype(&#39;category&#39;)
@@ -425,57 +427,130 @@ df[&#39;insulin&#39;] = df[&#39;insulin&#39;].astype(&#39;category&#39;)
 df[&#39;glyburide-metformin&#39;] = df[&#39;glyburide-metformin&#39;].astype(&#39;category&#39;)
 df[&#39;change&#39;] = df[&#39;change&#39;].astype(&#39;category&#39;)
 df[&#39;Med&#39;] = df[&#39;Med&#39;].astype(&#39;category&#39;)
+
+label_dict = {&#39;&gt;5&#39;:&#39;YES&#39;, &#39;&lt;30&#39;:&#39;YES&#39;,&#39;NO&#39;:&#39;NO&#39;}
+df = df.replace(dict(label=label_dict))
 df[&#39;label&#39;] = df[&#39;label&#39;].astype(&#39;category&#39;)
+
+df = df.iloc[:,1:]
 
 print(df.info())</code></pre>
 <pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
 ## RangeIndex: 101766 entries, 0 to 101765
-## Data columns (total 22 columns):
+## Data columns (total 21 columns):
 ##  #   Column               Non-Null Count   Dtype   
 ## ---  ------               --------------   -----   
-##  0   Unnamed: 0           101766 non-null  int64   
-##  1   cast                 99493 non-null   category
-##  2   gender               101766 non-null  category
-##  3   age group            101766 non-null  category
-##  4   time_in_hospital     101766 non-null  int64   
-##  5   num_lab_procedures   101766 non-null  int64   
-##  6   num_procedures       101766 non-null  int64   
-##  7   num_medications      101766 non-null  int64   
-##  8   number_outpatient    101766 non-null  int64   
-##  9   number_emergency     101766 non-null  int64   
-##  10  number_inpatient     101766 non-null  int64   
-##  11  number_diagnoses     101766 non-null  int64   
-##  12  max_glu_serum        101766 non-null  category
-##  13  A1Cresult            101766 non-null  category
-##  14  glimepiride          101766 non-null  category
-##  15  pioglitazone         101766 non-null  category
-##  16  rosiglitazone        101766 non-null  category
-##  17  insulin              101766 non-null  category
-##  18  glyburide-metformin  101766 non-null  category
-##  19  change               101766 non-null  category
-##  20  Med                  101766 non-null  category
-##  21  label                101766 non-null  category
-## dtypes: category(13), int64(9)
-## memory usage: 8.3 MB
+##  0   cast                 101766 non-null  category
+##  1   gender               101766 non-null  category
+##  2   age group            101766 non-null  category
+##  3   time_in_hospital     101766 non-null  int64   
+##  4   num_lab_procedures   101766 non-null  int64   
+##  5   num_procedures       101766 non-null  int64   
+##  6   num_medications      101766 non-null  int64   
+##  7   number_outpatient    101766 non-null  int64   
+##  8   number_emergency     101766 non-null  int64   
+##  9   number_inpatient     101766 non-null  int64   
+##  10  number_diagnoses     101766 non-null  int64   
+##  11  max_glu_serum        101766 non-null  category
+##  12  A1Cresult            101766 non-null  category
+##  13  glimepiride          101766 non-null  category
+##  14  pioglitazone         101766 non-null  category
+##  15  rosiglitazone        101766 non-null  category
+##  16  insulin              101766 non-null  category
+##  17  glyburide-metformin  101766 non-null  category
+##  18  change               101766 non-null  category
+##  19  Med                  101766 non-null  category
+##  20  label                101766 non-null  category
+## dtypes: category(13), int64(8)
+## memory usage: 7.5 MB
 ## None</code></pre>
-<div id="random-forest" class="section level1">
-<h1>Random Forest</h1>
-<pre class="python"><code># from sklearn.datasets import load_iris
-# from sklearn.model_selection import train_test_split
-# from skranger.ensemble import RangerForestClassifier
+<pre class="python"><code>X = df.iloc[:,0:-1]
+y = df.iloc[:,-1]
+X.head()</code></pre>
+<pre><code>##               cast  gender age group  ...  glyburide-metformin  change  Med
+## 0        Caucasian  Female    [0-10)  ...                   No      No   No
+## 1        Caucasian  Female   [10-20)  ...                   No      Ch  Yes
+## 2  AfricanAmerican  Female   [20-30)  ...                   No      No  Yes
+## 3        Caucasian    Male   [30-40)  ...                   No      Ch  Yes
+## 4        Caucasian    Male   [40-50)  ...                   No      Ch  Yes
+## 
+## [5 rows x 20 columns]</code></pre>
+<pre class="python"><code>y.head()</code></pre>
+<pre><code>## 0     NO
+## 1    YES
+## 2     NO
+## 3     NO
+## 4     NO
+## Name: label, dtype: category
+## Categories (2, object): [NO, YES]</code></pre>
+<div id="encoding" class="section level1">
+<h1>Encoding</h1>
+<pre class="python"><code>from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 
-# X, y = load_iris(return_X_y=True)
-# X_train, X_test, y_train, y_test = train_test_split(X, y)
-# 
-# rfc = RangerForestClassifier()
-# rfc.fit(X_train, y_train)
-# 
-# predictions = rfc.predict(X_test)
-# print(predictions)
-# # [1 2 0 0 0 0 1 2 1 1 2 2 2 1 1 0 1 1 0 1 1 1 0 2 1 0 0 1 2 2 0 1 2 2 0 2 0 0]
-# 
-# probabilities = rfc.predict_proba(X_test)
-# print(probabilities)</code></pre>
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+transformer = ColumnTransformer(transformers=[(&#39;cat&#39;, OneHotEncoder(), [0, 1,2,11,12,13,14,15,16,17,18,19])], remainder=&#39;passthrough&#39;)</code></pre>
+<div id="naive-baye" class="section level2">
+<h2>Naive Baye</h2>
+<pre class="python"><code>from sklearn.naive_bayes import GaussianNB</code></pre>
+</div>
+<div id="random-forest" class="section level2">
+<h2>Random Forest</h2>
+<pre class="python"><code>model_RF = RandomForestClassifier()
+pipeline_RF = Pipeline(steps=[(&#39;t&#39;, transformer), (&#39;m&#39;,model_RF)])
+pipeline_RF.fit(X_train, y_train)</code></pre>
+<pre><code>## Pipeline(steps=[(&#39;t&#39;,
+##                  ColumnTransformer(remainder=&#39;passthrough&#39;,
+##                                    transformers=[(&#39;cat&#39;, OneHotEncoder(),
+##                                                   [0, 1, 2, 11, 12, 13, 14, 15,
+##                                                    16, 17, 18, 19])])),
+##                 (&#39;m&#39;, RandomForestClassifier())])</code></pre>
+<pre class="python"><code>yhat_RF = pipeline_RF.predict(X_test)</code></pre>
+</div>
+<div id="decision-tree" class="section level2">
+<h2>Decision Tree</h2>
+<pre class="python"><code>from  sklearn.tree import DecisionTreeClassifier
+</code></pre>
+</div>
+</div>
+<div id="majority-voting-ensemble" class="section level1">
+<h1>Majority Voting Ensemble</h1>
+<pre class="python"><code>import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+clf1 = LogisticRegression(multi_class=&#39;multinomial&#39;, random_state=1)
+clf2 = RandomForestClassifier(n_estimators=50, random_state=1)
+clf3 = GaussianNB()
+X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
+y = np.array([1, 1, 1, 2, 2, 2])
+eclf1 = VotingClassifier(estimators=[
+        (&#39;lr&#39;, clf1), (&#39;rf&#39;, clf2), (&#39;gnb&#39;, clf3)], voting=&#39;hard&#39;)
+eclf1 = eclf1.fit(X, y)
+print(eclf1.predict(X))</code></pre>
+<pre><code>## [1 1 1 2 2 2]</code></pre>
+<pre class="python"><code>np.array_equal(eclf1.named_estimators_.lr.predict(X),
+               eclf1.named_estimators_[&#39;lr&#39;].predict(X))</code></pre>
+<pre><code>## True</code></pre>
+<pre class="python"><code>eclf2 = VotingClassifier(estimators=[
+        (&#39;lr&#39;, clf1), (&#39;rf&#39;, clf2), (&#39;gnb&#39;, clf3)],
+        voting=&#39;soft&#39;)
+eclf2 = eclf2.fit(X, y)
+print(eclf2.predict(X))</code></pre>
+<pre><code>## [1 1 1 2 2 2]</code></pre>
+<pre class="python"><code>eclf3 = VotingClassifier(estimators=[
+       (&#39;lr&#39;, clf1), (&#39;rf&#39;, clf2), (&#39;gnb&#39;, clf3)],
+       voting=&#39;soft&#39;, weights=[2,1,1],
+       flatten_transform=True)
+eclf3 = eclf3.fit(X, y)
+print(eclf3.predict(X))</code></pre>
+<pre><code>## [1 1 1 2 2 2]</code></pre>
+<pre class="python"><code>print(eclf3.transform(X).shape)</code></pre>
+<pre><code>## (6, 6)</code></pre>
 </div>
 
 

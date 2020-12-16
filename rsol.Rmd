@@ -92,7 +92,7 @@ Certain patients are abnormally high visitors e.g. 1 patient with Patient No. 88
 vv=sort(table(dt_original$patient_no),decreasing = T)
 mm <- sort(table(vv[vv>4]),decreasing=T) %>% as.data.frame() %>% as.matrix() 
 dimnames(mm) <- list(c(),c('Visits', 'No of Patients'))
-mm %>% as_huxtable(add_colnames=T) %>% set_top_border(row = 2)
+mm %>% as_huxtable(add_colnames=T)
 ```
 
 ## Vislaizations for Factor Variables vs. Target Variables  

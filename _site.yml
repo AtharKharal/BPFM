@@ -26,4 +26,7 @@ output:
     toc: yes
     toc_float:
       collapsed: no
+    include:
+      after_body: footer.html
+    css: styles.css
 ---

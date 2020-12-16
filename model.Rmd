@@ -44,7 +44,6 @@ X.head()
 y.head()
 ```
 
-# Encoding  
 
 ```{python}
 from sklearn.model_selection import train_test_split
@@ -54,21 +53,38 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 
+```
+
+
+# Encoding  
+
+```{python}
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 transformer = ColumnTransformer(transformers=[('cat', OneHotEncoder(), [0, 1,2,11,12,13,14,15,16,17,18,19])], remainder='passthrough')
 
 ```
 
+# Model Development  
 
-## Naive Baye  
+## Naive Baye's Model  
 
 ```{python}
 from sklearn.naive_bayes import GaussianNB
+# X, y = load_iris(return_X_y=True)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+
+model_NB = GaussianNB()
+pipeline_NB = Pipeline(steps=[('t', transformer), ('m',model_NB)])
+pipeline_NB.fit(X_train, y_train)
+yhat_NB = pipeline_NB.predict(X_test)
+
+print("Number of mislabeled points out of a total %d points : %d"
+      % (X_test.shape[0], (y_test != yhat_NB).sum()))
 ```
 
 
 
-## Random Forest  
+## Random Forest Model  
 ```{python}
 model_RF = RandomForestClassifier()
 pipeline_RF = Pipeline(steps=[('t', transformer), ('m',model_RF)])
@@ -76,12 +92,18 @@ pipeline_RF.fit(X_train, y_train)
 yhat_RF = pipeline_RF.predict(X_test)
 ```
 
-## Decision Tree  
+## Decision Tree Model  
 
 ```{python}
-from  sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeClassifier
 
+model_DT = DecisionTreeClassifier(random_state=0)
+pipeline_DT = Pipeline(steps=[('t', transformer), ('m',model_DT)])
+pipeline_DT.fit(X_train, y_train)
+yhat_DT = pipeline_DT.predict(X_test)
 
+# cross_val_score(model_DT, X, y, cv=3)
 ```
 
 

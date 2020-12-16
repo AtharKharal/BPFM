@@ -85,6 +85,7 @@ h6 {
 }
 </style>
 
+<link rel="stylesheet" href="styles.css" type="text/css" />
 
 
 
@@ -483,23 +484,42 @@ X.head()</code></pre>
 ## 4     NO
 ## Name: label, dtype: category
 ## Categories (2, object): [NO, YES]</code></pre>
-<div id="encoding" class="section level1">
-<h1>Encoding</h1>
 <pre class="python"><code>from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, RobustScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier
-
-X_train, X_test, y_train, y_test = train_test_split(X, y)
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier</code></pre>
+<div id="encoding" class="section level1">
+<h1>Encoding</h1>
+<pre class="python"><code>X_train, X_test, y_train, y_test = train_test_split(X, y)
 transformer = ColumnTransformer(transformers=[(&#39;cat&#39;, OneHotEncoder(), [0, 1,2,11,12,13,14,15,16,17,18,19])], remainder=&#39;passthrough&#39;)</code></pre>
-<div id="naive-baye" class="section level2">
-<h2>Naive Baye</h2>
-<pre class="python"><code>from sklearn.naive_bayes import GaussianNB</code></pre>
 </div>
-<div id="random-forest" class="section level2">
-<h2>Random Forest</h2>
+<div id="model-development" class="section level1">
+<h1>Model Development</h1>
+<div id="naive-bayes-model" class="section level2">
+<h2>Naive Baye’s Model</h2>
+<pre class="python"><code>from sklearn.naive_bayes import GaussianNB
+# X, y = load_iris(return_X_y=True)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+
+model_NB = GaussianNB()
+pipeline_NB = Pipeline(steps=[(&#39;t&#39;, transformer), (&#39;m&#39;,model_NB)])
+pipeline_NB.fit(X_train, y_train)</code></pre>
+<pre><code>## Pipeline(steps=[(&#39;t&#39;,
+##                  ColumnTransformer(remainder=&#39;passthrough&#39;,
+##                                    transformers=[(&#39;cat&#39;, OneHotEncoder(),
+##                                                   [0, 1, 2, 11, 12, 13, 14, 15,
+##                                                    16, 17, 18, 19])])),
+##                 (&#39;m&#39;, GaussianNB())])</code></pre>
+<pre class="python"><code>yhat_NB = pipeline_NB.predict(X_test)
+
+print(&quot;Number of mislabeled points out of a total %d points : %d&quot;
+      % (X_test.shape[0], (y_test != yhat_NB).sum()))</code></pre>
+<pre><code>## Number of mislabeled points out of a total 25442 points : 13076</code></pre>
+</div>
+<div id="random-forest-model" class="section level2">
+<h2>Random Forest Model</h2>
 <pre class="python"><code>model_RF = RandomForestClassifier()
 pipeline_RF = Pipeline(steps=[(&#39;t&#39;, transformer), (&#39;m&#39;,model_RF)])
 pipeline_RF.fit(X_train, y_train)</code></pre>
@@ -511,10 +531,23 @@ pipeline_RF.fit(X_train, y_train)</code></pre>
 ##                 (&#39;m&#39;, RandomForestClassifier())])</code></pre>
 <pre class="python"><code>yhat_RF = pipeline_RF.predict(X_test)</code></pre>
 </div>
-<div id="decision-tree" class="section level2">
-<h2>Decision Tree</h2>
-<pre class="python"><code>from  sklearn.tree import DecisionTreeClassifier
-</code></pre>
+<div id="decision-tree-model" class="section level2">
+<h2>Decision Tree Model</h2>
+<pre class="python"><code>from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeClassifier
+
+model_DT = DecisionTreeClassifier(random_state=0)
+pipeline_DT = Pipeline(steps=[(&#39;t&#39;, transformer), (&#39;m&#39;,model_DT)])
+pipeline_DT.fit(X_train, y_train)</code></pre>
+<pre><code>## Pipeline(steps=[(&#39;t&#39;,
+##                  ColumnTransformer(remainder=&#39;passthrough&#39;,
+##                                    transformers=[(&#39;cat&#39;, OneHotEncoder(),
+##                                                   [0, 1, 2, 11, 12, 13, 14, 15,
+##                                                    16, 17, 18, 19])])),
+##                 (&#39;m&#39;, DecisionTreeClassifier(random_state=0))])</code></pre>
+<pre class="python"><code>yhat_DT = pipeline_DT.predict(X_test)
+
+# cross_val_score(model_DT, X, y, cv=3)</code></pre>
 </div>
 </div>
 <div id="majority-voting-ensemble" class="section level1">
@@ -553,6 +586,8 @@ print(eclf3.predict(X))</code></pre>
 <pre><code>## (6, 6)</code></pre>
 </div>
 
+<!DOCTYPE html>
+<p>Copyright &copy; 2020 Mahreen Athar, All rights reserved.</p>
 
 
 </div>

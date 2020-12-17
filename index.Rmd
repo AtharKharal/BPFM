@@ -9,16 +9,16 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<h2 style="color:blue; margin-left:35%">Solution of Assignment on</h2>
+<h2 style="color:blue; margin-left:35%">Final Project</h2>
   
 
 <h1 style="color:blue; margin-left:35%">Data Science 301</h1> 
-<h2 style="color:blue; margin-left:35%">submitted to</h2>
+<h4 style="color:blue; margin-left:35%">submitted to</h4>
 <h1 style="color:blue; margin-left:35%">Sir Umair</h1>
   
     
 <h1 style="color:blue; margin-left:35%">BS Data Science</h1>
-<h1 style="color:blue; margin-left:35%">submitted by</h1>
+<h4 style="color:blue; margin-left:35%">submitted by</h4>
 <h1 style="color:red; margin-left:35%"><strong>Mahreen Athar</strong></h1>
-<h1 style="color:red; margin-left:35%">ID: 1917123</h1>
+<h1 style="color:red; margin-left:35%">ID: 191712</h1>
 
